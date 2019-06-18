@@ -85,7 +85,7 @@ class FindDialog(wx.Dialog):
             name = pattern.sub(r'_\2', ctrl.GetName().lower())
             try:
                 if data:
-                    self.entry.SetSelection(data.__attrs__.index(name))
+                    self.entry.SetSelection(data.__fields__.index(name))
                 if type(ctrl) in (HexCtrl, UnknownHexCtrl, SingleSelectionBox, MultipleSelectionBox):
                     self.find_ctrl.SetValue(f'0x{ctrl.GetValue():X}')
                 else:
@@ -100,7 +100,7 @@ class FindDialog(wx.Dialog):
         selection = self.items.GetSelection()
         if selection < len(ITEM_TYPES):
             item_type = ITEM_TYPES[self.items.GetSelection()]
-            for attr in item_type.bac_record.__attrs__:
+            for attr in item_type.bac_record.__fields__:
                 self.entry.Append(attr)
         # self.entry.Append(self.all_types)
         self.entry.Select(0)
@@ -121,7 +121,7 @@ class FindDialog(wx.Dialog):
         while item != selected:
             data = self.entry_list.GetItemData(item)
             # if item_type is None and type(data) in ITEM_TYPES and entry_type is None:
-            #     for field in data.__attrs__:
+            #     for field in data.__fields__:
             #         if data[field] == find:
             #             break
             #     else:
@@ -129,7 +129,7 @@ class FindDialog(wx.Dialog):
             #     self.select_found(item, field)
             #     break
             # elif type(data) == item_type and entry_type is None:
-            #     for field in data.__attrs__:
+            #     for field in data.__fields__:
             #         if data[field] == find:
             #             break
             #     else:
@@ -155,7 +155,7 @@ class FindDialog(wx.Dialog):
         if item_type:
             bac_record = item_type.bac_record
             selection = self.entry.GetSelection()
-            entry_type = bac_record.__attrs__[selection] if selection < len(bac_record.__attrs__) else None
+            entry_type = bac_record.__fields__[selection] if selection < len(bac_record.__fields__) else None
         else:
             entry_type = None
 

@@ -151,7 +151,7 @@ class BasePanel(wx.Panel):
     def load_entry(self, item, entry):
         self.item = item
         self.saved_values = {}
-        for name in entry.__attrs__:
+        for name in entry.__fields__:
             self[name].SetValue(entry[name])
         self.entry = entry
 
@@ -159,7 +159,7 @@ class BasePanel(wx.Panel):
         if self.entry is None:
             return
         start_time = self.entry.start_time
-        for name in self.entry.__attrs__:
+        for name in self.entry.__fields__:
             control = self[name]
             self.entry[name] = control.GetValue()
         if self.entry.start_time != start_time:

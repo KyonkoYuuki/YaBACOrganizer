@@ -32,7 +32,7 @@ class ReplaceDialog(FindDialog):
 
     def on_replace(self, _):
         item_type = ITEM_TYPES[self.items.GetSelection()]
-        entry_type = item_type.bac_record.__attrs__[self.entry.GetSelection()]
+        entry_type = item_type.bac_record.__fields__[self.entry.GetSelection()]
         try:
             find = int(self.find_ctrl.GetValue(), 0)
             replace = int(self.replace_ctrl.GetValue(), 0)
@@ -57,7 +57,7 @@ class ReplaceDialog(FindDialog):
 
     def on_replace_all(self, _):
         item_type = ITEM_TYPES[self.items.GetSelection()]
-        entry_type = item_type.bac_record.__attrs__[self.entry.GetSelection()]
+        entry_type = item_type.bac_record.__fields__[self.entry.GetSelection()]
         try:
             find = int(self.find_ctrl.GetValue(), 0)
             replace = int(self.replace_ctrl.GetValue(), 0)

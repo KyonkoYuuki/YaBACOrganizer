@@ -143,7 +143,7 @@ class MainPanel(wx.Panel):
         for entry in self.bac.entries:
             for sub_entry in entry.sub_entries:
                 for item in sub_entry.items:
-                    if 'skill_id' not in item.__attrs__:
+                    if 'skill_id' not in item.__fields__:
                         continue
                     if item.skill_id != 0 and item.skill_id != 0xFFFF and item.skill_id != 0xBACA:
                         choices.update([str(item.skill_id)])
@@ -163,7 +163,7 @@ class MainPanel(wx.Panel):
         changed = 0
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
-            if 'skill_id' in data.__attrs__ and data.skill_id == skill_id:
+            if 'skill_id' in data.__fields__ and data.skill_id == skill_id:
                 data.skill_id = 0xBACA
                 changed += 1
             item = self.entry_list.GetNextItem(item)
