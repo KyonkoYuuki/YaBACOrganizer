@@ -19,7 +19,7 @@ VERSION = '0.1.7'
 
 
 class MainWindow(wx.Frame):
-    def __init__(self, parent, title):
+    def __init__(self, parent, title, dirname, filename):
         sys.excepthook = self.exception_hook
         self.dirname = ''
         self.locale = wx.Locale(wx.LANGUAGE_ENGLISH)
@@ -123,6 +123,9 @@ class MainWindow(wx.Frame):
         sizer.Layout()
         self.Show()
 
+        if filename:
+            self.load_bac(dirname, filename)
+
     def exception_hook(self, etype, value, trace):
         dlg = ScrolledMessageDialog(self, ''.join(traceback.format_exception(etype, value, trace)), "Error")
         dlg.ShowModal()
@@ -145,7 +148,7 @@ class MainWindow(wx.Frame):
             self.load_bac(dlg.GetFilename(), dlg.GetDirectory())
         dlg.Destroy()
 
-    def load_bac(self, filename, dirname):
+    def load_bac(self, dirname, filename):
         self.dirname = dirname
         path = os.path.join(self.dirname, filename)
         self.statusbar.SetStatusText("Loading...")
@@ -203,5 +206,8 @@ class MainWindow(wx.Frame):
 
 if __name__ == '__main__':
     app = wx.App(False)
-    frame = MainWindow(None, f"YaBAC Organizer v{VERSION}")
+    dirname = filename = None
+    if len(sys.argv) > 1:
+        dirname, filename = os.path.split(sys.argv[1])
+    frame = MainWindow(None, f"YaBAC Organizer v{VERSION}", dirname, filename)
     app.MainLoop()

@@ -20,7 +20,7 @@ class ProjectilePanel(BasePanel):
         self.bone_to_spawn_from = self.add_single_selection_entry(
             bsa_page, 'Bone to Spawn From', majorDimension=5, choices=BONE_TYPES)
 
-        self.spawn_source = self.add_multiple_selection_entry(spawn_page, 'Spawn Source', choices=[
+        self.spawn_source = self.add_multiple_selection_entry(spawn_page, 'Spawn Source', cols=1, majorDimension=3, choices=[
             ('Spawn', {
                 'Spawn source': 0x0,
                 'Unknown (0x1)': 0x1,
@@ -39,9 +39,6 @@ class ProjectilePanel(BasePanel):
         self.position_x = self.add_float_entry(self.entry_page, 'Position X')
         self.position_y = self.add_float_entry(self.entry_page, 'Position Y')
         self.position_z = self.add_float_entry(self.entry_page, 'Position Z')
-        self.rotation_x = self.add_float_entry(self.unknown_page, 'Rotation X')
-        self.rotation_y = self.add_float_entry(self.unknown_page, 'Rotation Y')
-        self.rotation_z = self.add_float_entry(self.unknown_page, 'Rotation Z')
         self.skill_type = self.add_single_selection_entry(bsa_page, 'Skill Type', majorDimension=2, choices={
             'CMN': 0x0,
             'Awoken': 0x3,
@@ -51,7 +48,7 @@ class ProjectilePanel(BasePanel):
             'Blast': 0x8,
             'Unknown (0x9)': 0x9
         })
-        self.spawn_properties = self.add_multiple_selection_entry(spawn_page, 'Spawn Properties', choices=[
+        self.spawn_properties = self.add_multiple_selection_entry(spawn_page, 'Spawn Properties', cols=1, choices=[
             ('Duplicate', {
                 'None': 0x0,
                 'One per player': 0x1,
@@ -64,6 +61,9 @@ class ProjectilePanel(BasePanel):
             }, False)
         ])
         self.projectile_health = self.add_num_entry(self.entry_page, 'Projectile Health', max=0xFFFFFFFF)
+        self.f_28 = self.add_float_entry(self.unknown_page, 'F_28')
+        self.u_2c = self.add_hex_entry(self.unknown_page, 'U_2C', max=0xFFFF)
+        self.u_2e = self.add_hex_entry(self.unknown_page, 'U_2E', max=0xFFFF)
         self.u_34 = self.add_hex_entry(self.unknown_page, 'U_34')
         self.u_38 = self.add_hex_entry(self.unknown_page, 'U_38')
         self.u_3c = self.add_hex_entry(self.unknown_page, 'U_3C')
