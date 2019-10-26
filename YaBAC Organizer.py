@@ -145,7 +145,7 @@ class MainWindow(wx.Frame):
     def open_bac(self, _):
         dlg = wx.FileDialog(self, "Choose a file", self.dirname, "", "*.bac", wx.FD_OPEN)
         if dlg.ShowModal() == wx.ID_OK:
-            self.load_bac(dlg.GetFilename(), dlg.GetDirectory())
+            self.load_bac(dlg.GetDirectory(), dlg.GetFilename())
         dlg.Destroy()
 
     def load_bac(self, dirname, filename):
