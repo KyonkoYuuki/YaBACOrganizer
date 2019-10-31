@@ -27,5 +27,6 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
 0.1.6 - Fixed Part Invisibility not working
 0.1.7 - Fixed deleting the wrong entries, fixed pasting entries with projectiles, fixed error when changing entry flags
 0.1.8 - Added ability to drag/associate files to exe to open them, fixed Projectiles panel
+0.1.9 - Fixed convert to skill editor
 ```
 

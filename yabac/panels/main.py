@@ -140,13 +140,15 @@ class MainPanel(wx.Panel):
 
         # Get Choices
         choices = set()
-        for entry in self.bac.entries:
-            for sub_entry in entry.sub_entries:
-                for item in sub_entry.items:
-                    if 'skill_id' not in item.__fields__:
-                        continue
-                    if item.skill_id != 0 and item.skill_id != 0xFFFF and item.skill_id != 0xBACA:
-                        choices.update([str(item.skill_id)])
+        item = self.entry_list.GetFirstItem()
+        while item.IsOk():
+            data = self.entry_list.GetItemData(item)
+            item = self.entry_list.GetNextItem(item)
+            if 'skill_id' not in data.__fields__:
+                continue
+            if data.skill_id != 0 and data.skill_id != 0xFFFF and data.skill_id != 0xBACA:
+                choices.update([str(item.skill_id)])
+
         if not choices:
             with wx.MessageDialog(self, "Cannot find any Skill IDs to convert", "Error") as dlg:
                 dlg.ShowModal()
@@ -167,7 +169,6 @@ class MainPanel(wx.Panel):
                 data.skill_id = 0xBACA
                 changed += 1
             item = self.entry_list.GetNextItem(item)
-        self.on_select(None)
         pub.sendMessage('set_status_bar', text=f'Changed {changed} skill ids to 0xBACA')
 
     def on_select(self, _):
