@@ -147,7 +147,7 @@ class MainPanel(wx.Panel):
             if 'skill_id' not in data.__fields__:
                 continue
             if data.skill_id != 0 and data.skill_id != 0xFFFF and data.skill_id != 0xBACA:
-                choices.update([str(item.skill_id)])
+                choices.update([str(data.skill_id)])
 
         if not choices:
             with wx.MessageDialog(self, "Cannot find any Skill IDs to convert", "Error") as dlg:
