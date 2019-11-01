@@ -169,6 +169,7 @@ class MainPanel(wx.Panel):
                 data.skill_id = 0xBACA
                 changed += 1
             item = self.entry_list.GetNextItem(item)
+        self.on_select(None)
         pub.sendMessage('set_status_bar', text=f'Changed {changed} skill ids to 0xBACA')
 
     def on_select(self, _):
