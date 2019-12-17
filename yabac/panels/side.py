@@ -34,6 +34,7 @@ from yabac.panels.types.type22_panel import Type22Panel
 from yabac.panels.types.transparency_effect_panel import TransparencyEffectPanel
 from yabac.panels.types.dual_skill_data_panel import DualSkillDataPanel
 from yabac.panels.types.charge_attack_parameters_panel import ChargeAttackParametersPanel
+from yabac.panels.types.type26_panel import Type26Panel
 
 RE_PATTERN = re.compile(r".*'(.*[.])*(.*)'.*")
 
