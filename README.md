@@ -29,5 +29,6 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
 0.1.8 - Added ability to drag/associate files to exe to open them, fixed Projectiles panel
 0.1.9 - Fixed convert to skill editor
 0.2.0 - Added support for BACType26
+0.2.1 - Fixed bug with pasting
 ```
 
