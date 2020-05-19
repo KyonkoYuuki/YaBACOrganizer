@@ -161,7 +161,16 @@ class BasePanel(wx.Panel):
         start_time = self.entry.start_time
         for name in self.entry.__fields__:
             control = self[name]
-            self.entry[name] = control.GetValue()
+            # SpinCtrlDoubles suck
+            if isinstance(control, wx.SpinCtrlDouble):
+                try:
+                    self.entry[name] = float(control.Children[0].GetValue())
+                except ValueError:
+                    # Keep old value if its mistyped
+                    pass
+            else:
+                self.entry[name] = control.GetValue()
+
         if self.entry.start_time != start_time:
             pub.sendMessage('update_item', item=self.item, entry=self.entry)
             pub.sendMessage('reindex')
