@@ -19,8 +19,6 @@ class PasteDialog(wx.Dialog):
         self.links = {}
         self.conflict_links = []
 
-        print(pasted_values)
-
         for item_type, v1 in pasted_values.items():
             label = wx.StaticText(self, -1, item_type.__name__)
             label.SetFont(font)
