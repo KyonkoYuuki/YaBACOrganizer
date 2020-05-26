@@ -98,10 +98,14 @@ class BasePanel(wx.Panel):
 
     @add_entry
     def add_text_entry(self, panel, _, *args, **kwargs):
+        if 'size' not in kwargs:
+            kwargs['size'] = (150, -1)
         return TextCtrl(panel, *args, **kwargs)
 
     @add_entry
     def add_num_entry(self, panel, _, *args, **kwargs):
+        if 'size' not in kwargs:
+            kwargs['size'] = (150, -1)
         kwargs['min'], kwargs['max'] = 0, 65535
         return wx.SpinCtrl(panel, *args, **kwargs)
 
@@ -115,10 +119,14 @@ class BasePanel(wx.Panel):
 
     @add_entry
     def add_unknown_hex_entry(self, panel, _, *args, **kwargs):
+        if 'size' not in kwargs:
+            kwargs['size'] = (150, -1)
         return UnknownHexCtrl(panel, *args, **kwargs)
 
     @add_entry
     def add_float_entry(self, panel, _, *args, **kwargs):
+        if 'size' not in kwargs:
+            kwargs['size'] = (150, -1)
         if 'min' not in kwargs:
             kwargs['min'] = -3.402823466e38
         if 'max' not in kwargs:
