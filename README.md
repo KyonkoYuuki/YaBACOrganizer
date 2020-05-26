@@ -31,5 +31,6 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
 0.2.0 - Added support for BACType26
 0.2.1 - Fixed bug with pasting, swapped x and y rotation in camera entry, fixed skill type in projectile panel
 0.2.2 - Fixed floats not updating sometimes, fixed dummy BAC entries when saving, fixed throws on older BACs
+0.2.3 - Fixed Throws loading incorrectly, fixed Type22 entries being unable to load
 ```
 
