@@ -2,10 +2,11 @@ import wx
 from pubsub import pub
 from wx.lib.scrolledpanel import ScrolledPanel
 
-from pyxenoverse.gui import add_entry
+from pyxenoverse.gui import add_entry, EVT_RESULT, EditThread
 from pyxenoverse.gui.ctrl.hex_ctrl import HexCtrl
 from pyxenoverse.gui.ctrl.multiple_selection_box import MultipleSelectionBox
 from pyxenoverse.gui.ctrl.single_selection_box import SingleSelectionBox
+from pyxenoverse.gui.ctrl.text_ctrl import TextCtrl
 from pyxenoverse.gui.ctrl.unknown_hex_ctrl import UnknownHexCtrl
 
 MAX_UINT16 = 0xFFFF
@@ -56,6 +57,7 @@ class BasePanel(wx.Panel):
         self.entry = None
         self.saved_values = {}
         self.item_type = item_type
+        self.edit_thread = None
 
         self.notebook = wx.Notebook(self)
         self.entry_page = Page(self.notebook)
@@ -77,9 +79,10 @@ class BasePanel(wx.Panel):
                 'Roster Only': 0x02
             })
         # self.Bind(wx.EVT_SET_FOCUS, self.on_focus)
-        self.Bind(wx.EVT_TEXT, self.save_entry)
+        self.Bind(wx.EVT_TEXT, self.on_edit)
         self.Bind(wx.EVT_CHECKBOX, self.save_entry)
         self.Bind(wx.EVT_RADIOBOX, self.save_entry)
+        EVT_RESULT(self, self.save_entry)
 
         pub.subscribe(self.focus_on, 'focus_on')
 
@@ -92,6 +95,10 @@ class BasePanel(wx.Panel):
     @add_entry
     def add_hex_entry(self, panel, _, *args, **kwargs):
         return HexCtrl(panel, *args, **kwargs)
+
+    @add_entry
+    def add_text_entry(self, panel, _, *args, **kwargs):
+        return TextCtrl(panel, *args, **kwargs)
 
     @add_entry
     def add_num_entry(self, panel, _, *args, **kwargs):
@@ -125,6 +132,12 @@ class BasePanel(wx.Panel):
         control = self.add_float_entry(panel, None, *args, **kwargs)
         return label, control
 
+    def on_edit(self, _):
+        if not self.edit_thread:
+            self.edit_thread = EditThread(self)
+        else:
+            self.edit_thread.new_sig()
+
     def hide_entry(self, name):
         try:
             label = self.__getattribute__(name + '_label')
@@ -156,6 +169,7 @@ class BasePanel(wx.Panel):
         self.entry = entry
 
     def save_entry(self, _):
+        self.edit_thread = None
         if self.entry is None:
             return
         start_time = self.entry.start_time
