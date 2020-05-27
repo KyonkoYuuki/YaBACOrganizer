@@ -1,3 +1,6 @@
+from pubsub import pub
+import wx
+
 from yabac.panels.types import BasePanel
 
 
@@ -5,25 +8,19 @@ class HomingMovementPanel(BasePanel):
     def __init__(self, *args):
 
         BasePanel.__init__(self, *args)
-        self.type = self.add_single_selection_entry(self.entry_page, 'Type', choices={
-            'Horizontal arc': 0x0,
-            'Straight line': 0x1,
-            'Right-left/up-down arc': 0x2
+        self.type = self.add_unknown_hex_entry(self.entry_page, 'Type', showKnown=True, knownValues={
+            0x0: 'Horizontal arc',
+            0x1: 'Straight line',
+            0x2: 'Right-left/up-down arc'
         })
-        self.horizontal_homing_arc_direction = self.add_single_selection_entry(
-            self.entry_page, 'Horizontal Homing\nArc Direction', majorDimension=5, choices={
-                'Right->left': 0x0,
-                'Left->right': 0x1,
-                'Unknown (0x4)': 0x4,
-                'Unknown (0x5)': 0x5,
-                'Unknown (0x7)': 0x7,
-                'Unknown (0x8)': 0x8,
-                'Unknown (0x9)': 0x9,
-                'Unknown (0xd)': 0xd,
-                'Unknown (0xf)': 0xf,
+        self.horizontal_homing_arc_direction = self.add_unknown_hex_entry(
+            self.entry_page, 'Horizontal Homing\nArc Direction', showKnown=True, knownValues={
+                0x0: 'Right->left',
+                0x1: 'Left->right',
+                0x7: 'Allow float (Speed Modifier)'
             })
 
-        self.speed_modifier = self.add_num_entry(self.entry_page, 'Speed Modifier')
+        self.speed_modifier = self.add_float_entry(self.entry_page, 'Speed Modifier')
         self.u_10 = self.add_hex_entry(self.unknown_page, 'U_10')
         self.horizontal_direction_modifier = self.add_float_entry(self.entry_page, 'Horizontal Direction\nModifier')
         self.vertical_direction_modifier = self.add_float_entry(self.entry_page, 'Vertical Direction\nModifier')
@@ -32,3 +29,30 @@ class HomingMovementPanel(BasePanel):
         self.u_24 = self.add_hex_entry(self.unknown_page, 'U_24')
         self.u_28 = self.add_hex_entry(self.unknown_page, 'U_28')
         self.u_2c = self.add_hex_entry(self.unknown_page, 'U_2C')
+
+    def save_entry(self, _):
+        self.edit_thread = None
+        if self.entry is None:
+            return
+        start_time = self.entry.start_time
+        horizontal_homing_arc_direction = self.horizontal_homing_arc_direction.GetValue()
+        for name in self.entry.__fields__:
+            control = self[name]
+            # SpinCtrlDoubles suck
+            if isinstance(control, wx.SpinCtrlDouble):
+                try:
+                    self.entry[name] = float(control.Children[0].GetValue())
+                except ValueError:
+                    # Keep old value if its mistyped
+                    pass
+                if name == "speed_modifier" and horizontal_homing_arc_direction != 7:
+                    old_value, self.entry[name] = self.entry[name], int(self.entry[name])
+                    if old_value != self.entry[name]:
+                        control.SetValue(self.entry[name])
+            else:
+                self.entry[name] = control.GetValue()
+
+        if self.entry.start_time != start_time:
+            pub.sendMessage('update_item', item=self.item, entry=self.entry)
+            pub.sendMessage('reindex')
+
