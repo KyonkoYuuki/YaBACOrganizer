@@ -3,6 +3,7 @@ from pubsub import pub
 from wx.lib.scrolledpanel import ScrolledPanel
 
 from pyxenoverse.gui import add_entry, EVT_RESULT, EditThread
+from pyxenoverse.gui.ctrl.colour_picker_ctrl import ColourPickerCtrl
 from pyxenoverse.gui.ctrl.hex_ctrl import HexCtrl
 from pyxenoverse.gui.ctrl.multiple_selection_box import MultipleSelectionBox
 from pyxenoverse.gui.ctrl.single_selection_box import SingleSelectionBox
@@ -82,6 +83,7 @@ class BasePanel(wx.Panel):
         self.Bind(wx.EVT_TEXT, self.on_edit)
         self.Bind(wx.EVT_CHECKBOX, self.save_entry)
         self.Bind(wx.EVT_RADIOBOX, self.save_entry)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.save_entry)
         EVT_RESULT(self, self.save_entry)
 
         pub.subscribe(self.focus_on, 'focus_on')
@@ -133,6 +135,10 @@ class BasePanel(wx.Panel):
             kwargs['max'] = 3.402823466e38
 
         return wx.SpinCtrlDouble(panel, *args, **kwargs)
+
+    @add_entry
+    def add_color_picker(self, panel, _, *args, **kwargs):
+        return ColourPickerCtrl(panel, *args, **kwargs)
 
     def add_nameable_float_entry(self, panel, *args, **kwargs):
         label = wx.StaticText(panel, -1, '')
