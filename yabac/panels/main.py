@@ -2,7 +2,6 @@ from functools import partial
 import pickle
 
 import wx
-import time
 from pubsub import pub
 
 from pyxenoverse.bac.entry import Entry
@@ -24,6 +23,7 @@ class MainPanel(wx.Panel):
         self.focus = None
         self.bac = None
         self.cdo = None
+        self.refresh = True
 
         self.entry_list = wx.TreeCtrl(self, style=wx.TR_MULTIPLE | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT | wx.TR_LINES_AT_ROOT | wx.TR_HIDE_ROOT)
         self.entry_list.SetDropTarget(FileDropTarget(self, "load_bac"))
@@ -183,7 +183,6 @@ class MainPanel(wx.Panel):
         self.expand_parents(item)
         if not self.entry_list.IsVisible(item):
             self.entry_list.ScrollTo(item)
-        self.on_select(None)
 
     def get_selected_root_nodes(self):
         selected = self.entry_list.GetSelections()
@@ -203,7 +202,7 @@ class MainPanel(wx.Panel):
         return nodes
 
     def on_select(self, _):
-        if not self.entry_list:
+        if not self.entry_list or not self.refresh:
             return
         selected = self.entry_list.GetSelections()
         if len(selected) != 1:
@@ -216,6 +215,7 @@ class MainPanel(wx.Panel):
         self.entry_list.SetItemText(item, f'{entry.index}: Entry (0x{entry.flags:X})')
 
     def update_item(self, item, entry):
+        self.refresh = False
         parent = self.entry_list.GetItemParent(item)
         self.entry_list.Delete(item)
         child = self.entry_list.GetFirstChild(parent)[0]
@@ -231,6 +231,8 @@ class MainPanel(wx.Panel):
             new_item = self.entry_list.AppendItem(
                 parent, f'{entry.index}: {entry.start_time}', data=entry)
         self.select_item(new_item)
+        self.refresh = True
+        self.on_select(None)
         return new_item
 
     def build_tree(self):
