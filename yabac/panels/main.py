@@ -2,13 +2,12 @@ from functools import partial
 import pickle
 
 import wx
-from wx.dataview import (
-    TreeListCtrl, EVT_TREELIST_SELECTION_CHANGED, EVT_TREELIST_ITEM_CONTEXT_MENU, TLI_FIRST, TL_MULTIPLE
-)
+import time
 from pubsub import pub
 
 from pyxenoverse.bac.entry import Entry
 from pyxenoverse.bac.sub_entry import SubEntry, ITEM_TYPES
+from pyxenoverse.gui import get_first_item, get_next_item
 from pyxenoverse.gui.ctrl.multiple_selection_box import MultipleSelectionBox
 from pyxenoverse.gui.ctrl.single_selection_box import SingleSelectionBox
 from pyxenoverse.gui.ctrl.unknown_hex_ctrl import UnknownHexCtrl
@@ -26,11 +25,10 @@ class MainPanel(wx.Panel):
         self.bac = None
         self.cdo = None
 
-        self.entry_list = TreeListCtrl(self, style=TL_MULTIPLE)
-        self.entry_list.AppendColumn("Entry")
+        self.entry_list = wx.TreeCtrl(self, style=wx.TR_MULTIPLE | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT | wx.TR_LINES_AT_ROOT | wx.TR_HIDE_ROOT)
         self.entry_list.SetDropTarget(FileDropTarget(self, "load_bac"))
-        self.entry_list.Bind(EVT_TREELIST_ITEM_CONTEXT_MENU, self.on_right_click)
-        self.entry_list.Bind(EVT_TREELIST_SELECTION_CHANGED, self.on_select)
+        self.entry_list.Bind(wx.EVT_TREE_ITEM_MENU, self.on_right_click)
+        self.entry_list.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_select)
         self.cdo = wx.CustomDataObject("BACEntry")
 
         self.append_id = wx.NewId()
@@ -140,10 +138,10 @@ class MainPanel(wx.Panel):
 
         # Get Choices
         choices = set()
-        item = self.entry_list.GetFirstItem()
+        item, _ = get_first_item(self.entry_list)
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
-            item = self.entry_list.GetNextItem(item)
+            item = get_next_item(self.entry_list, item)
             if 'skill_id' not in data.__fields__:
                 continue
             if data.skill_id != 0 and data.skill_id != 0xFFFF and data.skill_id != 0xBACA:
@@ -161,18 +159,52 @@ class MainPanel(wx.Panel):
             skill_id = dlg.GetValue()
 
         # Do conversion
-        item = self.entry_list.GetFirstItem()
+        item, _ = get_first_item(self.entry_list)
         changed = 0
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
             if 'skill_id' in data.__fields__ and data.skill_id == skill_id:
                 data.skill_id = 0xBACA
                 changed += 1
-            item = self.entry_list.GetNextItem(item)
+            item = get_next_item(self.entry_list, item)
         self.on_select(None)
         pub.sendMessage('set_status_bar', text=f'Changed {changed} skill ids to 0xBACA')
 
+    def expand_parents(self, item):
+        root = self.entry_list.GetRootItem()
+        parent = self.entry_list.GetItemParent(item)
+        while parent != root:
+            self.entry_list.Expand(parent)
+            parent = self.entry_list.GetItemParent(parent)
+
+    def select_item(self, item):
+        self.entry_list.UnselectAll()
+        self.entry_list.SelectItem(item)
+        self.expand_parents(item)
+        if not self.entry_list.IsVisible(item):
+            self.entry_list.ScrollTo(item)
+        self.on_select(None)
+
+    def get_selected_root_nodes(self):
+        selected = self.entry_list.GetSelections()
+        if not selected:
+            return []
+        root = self.entry_list.GetRootItem()
+
+        nodes = []
+        for item in selected:
+            parent = self.entry_list.GetItemParent(item)
+            while parent != root and parent.IsOk():
+                if parent in selected:
+                    break
+                parent = self.entry_list.GetItemParent(parent)
+            if parent == root:
+                nodes.append(item)
+        return nodes
+
     def on_select(self, _):
+        if not self.entry_list:
+            return
         selected = self.entry_list.GetSelections()
         if len(selected) != 1:
             pub.sendMessage('hide_panels')
@@ -185,25 +217,27 @@ class MainPanel(wx.Panel):
 
     def update_item(self, item, entry):
         parent = self.entry_list.GetItemParent(item)
-        self.entry_list.DeleteItem(item)
-        child = self.entry_list.GetFirstChild(parent)
-        previous = TLI_FIRST
+        self.entry_list.Delete(item)
+        child = self.entry_list.GetFirstChild(parent)[0]
+        index = 0
         while child.IsOk():
             if self.entry_list.GetItemData(child).start_time > entry.start_time:
                 new_item = self.entry_list.InsertItem(
-                    parent, previous, str(entry.start_time), data=entry)
+                    parent, index, str(entry.start_time), data=entry)
                 break
-            previous, child = child, self.entry_list.GetNextSibling(child)
+            child = self.entry_list.GetNextSibling(child)
+            index += 1
         else:
             new_item = self.entry_list.AppendItem(
                 parent, f'{entry.index}: {entry.start_time}', data=entry)
-        self.entry_list.Select(new_item)
-        self.on_select(None)
+        self.select_item(new_item)
         return new_item
 
     def build_tree(self):
-        hidden = self.parent.hidden.GetValue()
         self.entry_list.DeleteAllItems()
+        self.entry_list.Refresh()
+        hidden = self.parent.hidden.GetValue()
+        self.entry_list.AddRoot("Entries")
         for i, entry in enumerate(self.bac.entries):
             if not entry.sub_entries and hidden:
                 continue
@@ -235,7 +269,7 @@ class MainPanel(wx.Panel):
                 for k, item in enumerate(sub_entry.items):
                     item.index = k
 
-        item = self.entry_list.GetFirstItem()
+        item, _ = get_first_item(self.entry_list)
         hidden = self.parent.hidden.GetValue()
 
         # Fix tree names
@@ -243,23 +277,23 @@ class MainPanel(wx.Panel):
             to_delete = None
             data = self.entry_list.GetItemData(item)
             if data.get_name() == 'Entry':
-                if selected != item and hidden and not self.entry_list.GetFirstChild(item).IsOk():
+                if selected != item and hidden and not self.entry_list.GetFirstChild(item)[0].IsOk():
                     to_delete = item
                 else:
                     self.entry_list.SetItemText(item, f'{data.index}: Entry (0x{data.flags:X})')
             elif data.get_name() == 'SubEntry':
-                if selected != item and hidden and not self.entry_list.GetFirstChild(item).IsOk():
+                if selected != item and hidden and not self.entry_list.GetFirstChild(item)[0].IsOk():
                     to_delete = item
                 else:
                     self.entry_list.SetItemText(item, f'{data.type}: {data.get_type_name()}')
                     sub_entry = self.entry_list.GetItemData(item)
                     for entry in sub_entry.items:
-                        item = self.entry_list.GetNextItem(item)
+                        item = get_next_item(self.entry_list, item)
                         self.entry_list.SetItemData(item, entry)
                         self.entry_list.SetItemText(item, str(entry.start_time))
-            item = self.entry_list.GetNextItem(item)
+            item = get_next_item(self.entry_list, item)
             if to_delete:
-                self.entry_list.DeleteItem(to_delete)
+                self.entry_list.Delete(to_delete)
 
     def get_entry_item_pair(self, entry):
         return entry, self.entry_list.GetItemData(entry)
@@ -282,19 +316,9 @@ class MainPanel(wx.Panel):
             return
 
         # Check if append or insert
+        new_index = data.index
         if append:
-            previous = bac_entry
-            new_index = data.index + 1
-        else:
-            item = self.entry_list.GetFirstItem()
-            previous = TLI_FIRST
-            while item.IsOk():
-                next_item = self.entry_list.GetNextSibling(item)
-                if self.entry_list.GetItemData(next_item).index == data.index:
-                    previous = item
-                    break
-                item = next_item
-            new_index = data.index
+            new_index += 1
 
         # Add Entry
         new_entry = Entry(self.bac, new_index)
@@ -302,7 +326,7 @@ class MainPanel(wx.Panel):
 
         # Insert into Treelist
         root = self.entry_list.GetRootItem()
-        new_item = self.entry_list.InsertItem(root, previous, f'{new_index}: Entry', data=new_entry)
+        new_item = self.entry_list.InsertItem(root, new_index, f'{new_index}: Entry', data=new_entry)
         return new_item, new_entry
 
     def add_sub_entry(self, bac_value, bac_entry=None):
@@ -311,7 +335,7 @@ class MainPanel(wx.Panel):
             return None, None
 
         # Try to find the sub_entry first
-        item = self.entry_list.GetFirstChild(bac_entry)
+        item = self.entry_list.GetFirstChild(bac_entry)[0]
         while item.IsOk():
             sub_entry = self.entry_list.GetItemData(item)
             if sub_entry.type == bac_value:
@@ -329,14 +353,15 @@ class MainPanel(wx.Panel):
             sub_entry.index = i
 
         # Try to insert it into the tree at the right place
-        prev = TLI_FIRST
-        item = self.entry_list.GetFirstChild(bac_entry)
+        index = 0
+        item = self.entry_list.GetFirstChild(bac_entry)[0]
         for i in range(new_sub_entry.index):
             if not item.IsOk():
                 break
-            prev, item = item, self.entry_list.GetNextSibling(item)
+            item = self.entry_list.GetNextSibling(item)
+            index += 1
         new_item = self.entry_list.InsertItem(
-            bac_entry, prev, f'{new_sub_entry.type}: {new_sub_entry.get_type_name()}', data=new_sub_entry)
+            bac_entry, index, f'{new_sub_entry.type}: {new_sub_entry.get_type_name()}', data=new_sub_entry)
         return new_item, new_sub_entry
 
     def add_item(self, bac_value, copied_entry=None, bac_entry=None):
@@ -362,51 +387,46 @@ class MainPanel(wx.Panel):
         sub_entry_data.items.sort(key=lambda n: n.start_time)
 
         # Add to correct place in tree list
-        prev = TLI_FIRST
-        item = self.entry_list.GetFirstChild(sub_entry)
+        index = 0
+        item = self.entry_list.GetFirstChild(sub_entry)[0]
         while item.IsOk():
             if new_bac_type.start_time <= self.entry_list.GetItemData(item).start_time:
                 break
-            prev, item = item, self.entry_list.GetNextSibling(item)
-        new_item = self.entry_list.InsertItem(sub_entry, prev, '', data=new_bac_type)
+            item = self.entry_list.GetNextSibling(item)
+            index += 1
+        new_item = self.entry_list.InsertItem(sub_entry, index, '', data=new_bac_type)
         return new_item, new_bac_type
 
     def on_insert_bac_entry(self, _):
         new_item, _ = self.add_bac_entry(False)
-        self.entry_list.UnselectAll()
-        self.entry_list.Select(new_item)
+        self.select_item(new_item)
         self.reindex(new_item)
         pub.sendMessage('set_status_bar', text="Inserted new Entry")
 
     def on_append_bac_entry(self, _):
         new_item, _ = self.add_bac_entry(True)
-        self.entry_list.UnselectAll()
-        self.entry_list.Select(new_item)
+        self.select_item(new_item)
         self.reindex(new_item)
         pub.sendMessage('set_status_bar', text="Added new Entry")
 
     def on_add_item(self, _, bac_value):
         new_item, _ = self.add_item(bac_value)
-        self.entry_list.UnselectAll()
-        self.entry_list.Select(new_item)
+        self.select_item(new_item)
         self.reindex(new_item)
         self.on_select(None)
         pub.sendMessage('set_status_bar', text=f"Added new {ITEM_TYPES[bac_value].__name__}")
 
     def on_delete(self, _):
-        selected = self.entry_list.GetSelections()
+        # Get only the parents and select them.
+        selected = self.get_selected_root_nodes()
+        data = [self.entry_list.GetItemData(item) for item in selected]
         if not selected:
             return
         # First unselect children if parents are chosen
         delete_bac = True
-        bac_entries = []
-        item = self.entry_list.GetFirstItem()
-        while item.IsOk():
-            bac_entries.append(item)
-            item = self.entry_list.GetNextSibling(item)
 
         # See if bac entries are part of the selected
-        if any(item in bac_entries for item in selected):
+        if any(isinstance(entry, Entry) for entry in data):
             with wx.MessageDialog(self, 'Delete BAC entry(s) as well?', style=wx.YES | wx.NO | wx.CANCEL) as dlg:
                 res = dlg.ShowModal()
                 if res == wx.ID_YES:
@@ -416,33 +436,27 @@ class MainPanel(wx.Panel):
                 else:
                     return
 
-        # Get only the parents and select them.
-        for item in selected:
-            if self.entry_list.GetItemParent(item) in selected:
-                self.entry_list.Unselect(item)
-        selected = self.entry_list.GetSelections()
-
         # Loop over and delete
         for item in reversed(selected):
             data = self.entry_list.GetItemData(item)
             if data.get_name() == 'Entry':
                 if delete_bac:
                     self.bac.entries.remove(data)
-                    self.entry_list.DeleteItem(item)
+                    self.entry_list.Delete(item)
                 else:
                     self.bac.entries[data.index].sub_entries.clear()
-                    child = self.entry_list.GetFirstChild(item)
+                    child = self.entry_list.GetFirstChild(item)[0]
                     while child.IsOk():
                         sibling, child = child, self.entry_list.GetNextSibling(child)
-                        self.entry_list.DeleteItem(sibling)
+                        self.entry_list.Delete(sibling)
             elif data.get_name() == 'SubEntry':
                 parent = self.entry_list.GetItemData(self.entry_list.GetItemParent(item))
                 parent.sub_entries.remove(data)
-                self.entry_list.DeleteItem(item)
+                self.entry_list.Delete(item)
             else:
                 parent = self.entry_list.GetItemData(self.entry_list.GetItemParent(item))
                 parent.items.remove(data)
-                self.entry_list.DeleteItem(item)
+                self.entry_list.Delete(item)
         self.reindex()
         pub.sendMessage('set_status_bar', text="Deleted successfully")
 
@@ -507,10 +521,10 @@ class MainPanel(wx.Panel):
         entry.paste(paste_data, changed_values)
 
         # Delete Children
-        child = self.entry_list.GetFirstChild(item)
+        child = self.entry_list.GetFirstChild(item)[0]
         while child.IsOk():
             current, child = child, self.entry_list.GetNextSibling(child)
-            self.entry_list.DeleteItem(current)
+            self.entry_list.Delete(current)
         if not item or not entry:
             return
 
@@ -538,8 +552,7 @@ class MainPanel(wx.Panel):
         if class_name == 'Entry':
             new_entry, new_entry_data = self.add_bac_entry(append, selected[0])
             new_entry_data.paste(paste_data, copy_sub_entries=False)
-            self.entry_list.UnselectAll()
-            self.entry_list.Select(new_entry)
+            self.select_item(new_entry)
             for sub_entry in paste_data.sub_entries:
                 for item in sub_entry.items:
                     new_item, new_item_data = self.add_item(item.type, item)

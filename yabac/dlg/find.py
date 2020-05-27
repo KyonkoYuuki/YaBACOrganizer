@@ -4,6 +4,7 @@ import wx
 
 from pubsub import pub
 from pyxenoverse.bac.sub_entry import ITEM_TYPES
+from pyxenoverse.gui import get_first_item, get_next_item
 from pyxenoverse.gui.ctrl.hex_ctrl import HexCtrl
 from pyxenoverse.gui.ctrl.multiple_selection_box import MultipleSelectionBox
 from pyxenoverse.gui.ctrl.single_selection_box import SingleSelectionBox
@@ -107,7 +108,9 @@ class FindDialog(wx.Dialog):
 
     def select_found(self, item, entry_type):
         self.entry_list.UnselectAll()
-        self.entry_list.Select(item)
+        self.entry_list.SelectItem(item)
+        if not self.entry_list.IsVisible(item):
+            self.entry_list.ScrollTo(item)
         pub.sendMessage('on_select', _=None)
         pub.sendMessage('focus_on', entry=entry_type)
         self.SetFocus()
@@ -117,32 +120,16 @@ class FindDialog(wx.Dialog):
         if not selected.IsOk():
             self.status_bar.SetStatusText('No matches found')
             return
-        item = self.entry_list.GetNextItem(selected)
+        item = get_next_item(self.entry_list, selected)
         while item != selected:
             data = self.entry_list.GetItemData(item)
-            # if item_type is None and type(data) in ITEM_TYPES and entry_type is None:
-            #     for field in data.__fields__:
-            #         if data[field] == find:
-            #             break
-            #     else:
-            #         continue
-            #     self.select_found(item, field)
-            #     break
-            # elif type(data) == item_type and entry_type is None:
-            #     for field in data.__fields__:
-            #         if data[field] == find:
-            #             break
-            #     else:
-            #         continue
-            #     self.select_found(item, field)
-            #     break
             if type(data) == item_type and (find is None or data[entry_type] == find):
                 self.select_found(item, entry_type)
                 break
 
-            item = self.entry_list.GetNextItem(item)
+            item = get_next_item(self.entry_list, item)
             if not item.IsOk():
-                item = self.entry_list.GetFirstItem()
+                item, _ = get_first_item(self.entry_list)
         else:
             self.status_bar.SetStatusText('No matches found')
 
@@ -176,5 +163,5 @@ class FindDialog(wx.Dialog):
         if len(selected) == 1:
             selected = selected[0]
         else:
-            selected = self.entry_list.GetFirstItem()
+            selected, _ = get_first_item(self.entry_list)
         self.find(selected, item_type, entry_type, find)

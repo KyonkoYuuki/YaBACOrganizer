@@ -139,7 +139,7 @@ class MainWindow(wx.Frame):
         dlg.Destroy() # finally destroy it when finished.
 
     def on_exit(self, _):
-        self.find.Destroy()
+        self.Disable()
         self.Close(True)  # Close the frame.
 
     def open_bac(self, _):
