@@ -19,6 +19,7 @@ class EffectPanel(BasePanel):
             'Unknown (0x8)': 0x8,
             'Ki blast': 0x9,
             'Unknown (0xa)': 0xa,
+            'Stage (0xb)': 0xa,
         })
 
         self.bone_link = self.add_single_selection_entry(eepk_page, 'Bone Link', majorDimension=5, choices=BONE_TYPES)
@@ -36,5 +37,16 @@ class EffectPanel(BasePanel):
         self.u_20 = self.add_hex_entry(self.unknown_page, 'U_20')
         self.u_24 = self.add_hex_entry(self.unknown_page, 'U_24')
         self.u_28 = self.add_hex_entry(self.unknown_page, 'U_28')
-        self.on_off_switch = self.add_single_selection_entry(
-            self.entry_page, 'On/Off switch', choices=['Off'], multiple=True)
+        self.on_off_switch = self.add_unknown_hex_entry(
+            self.entry_page, 'On/Off switch', knownValues={
+                0x0: 'On',
+                0x1: 'Off',
+                0x2: 'On',
+                0x3: 'Off',
+                0x4: 'On (Spawn on target)',
+                0x8: 'On (Loop)',
+                0x9: 'Off',
+                0x10: 'On (Show only to user)',
+                0x14: 'On (Spawn on target)',
+                0x15: 'Off (used with 0x14)'
+            })

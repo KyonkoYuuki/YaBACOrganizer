@@ -14,9 +14,9 @@ class EyeMovementPanel(BasePanel):
             'Left (0x3)': 0x3,
             'None (0x4)': 0x4,
             'Right (0x5)': 0x5,
-            'Unknown (0x6)': 0x6,
-            'Unknown (0x7)': 0x7,
-            'Unknown (0x8)': 0x8,
+            'Left-Down (0x6)': 0x6,
+            'Down (0x7)': 0x7,
+            'Right-Down (0x8)': 0x8,
         })
         self.rotation = self.add_num_entry(self.entry_page, 'Rotation')
         self.eye_duration = self.add_num_entry(self.entry_page, 'Eye Duration')
