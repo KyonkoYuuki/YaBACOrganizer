@@ -38,5 +38,6 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
         * Added more known values to various BACTypes
         * Changed a few controls where there may be lots of unknown values
         * Fixed Type22 not loading and saving properly
+0.3.1 - Fixed append/inserts 
 ```
 

@@ -328,7 +328,17 @@ class MainPanel(wx.Panel):
 
         # Insert into Treelist
         root = self.entry_list.GetRootItem()
-        new_item = self.entry_list.InsertItem(root, new_index, f'{new_index}: Entry', data=new_entry)
+        tree_index = 0
+        item, _ = get_first_item(self.entry_list)
+        while item.IsOk():
+            text = self.entry_list.GetItemText(item)
+            item_index = int(text.split(':')[0])
+            if new_index <= item_index:
+                break
+            tree_index += 1
+            item = self.entry_list.GetNextSibling(item)
+
+        new_item = self.entry_list.InsertItem(root, tree_index, f'{new_index}: Entry', data=new_entry)
         return new_item, new_entry
 
     def add_sub_entry(self, bac_value, bac_entry=None):
