@@ -32,6 +32,11 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
 0.2.1 - Fixed bug with pasting, swapped x and y rotation in camera entry, fixed skill type in projectile panel
 0.2.2 - Fixed floats not updating sometimes, fixed dummy BAC entries when saving, fixed throws on older BACs
 0.2.3 - Fixed Throws loading incorrectly, fixed Type22 entries being unable to load
-0.2.4 - Fixed Type22 not showing name value
+0.3.0 - * Changed backend TreeListCtrl
+        * Added color picker for transparencies
+        * Added floating point values for HomingMovement
+        * Added more known values to various BACTypes
+        * Changed a few controls where there may be lots of unknown values
+        * Fixed Type22 not loading and saving properly
 ```
 
