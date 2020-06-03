@@ -9,13 +9,14 @@ from wx.lib.dialogs import ScrolledMessageDialog
 from wx.lib.agw.hyperlink import HyperLinkCtrl
 
 from pyxenoverse.bac import BAC
+from pyxenoverse.gui import create_backup
 from yabac.panels.main import MainPanel
 from yabac.panels.side import SidePanel
 from yabac.dlg.find import FindDialog
 from yabac.dlg.replace import ReplaceDialog
 
 
-VERSION = '0.3.2'
+VERSION = '0.3.3'
 
 
 class MainWindow(wx.Frame):
@@ -177,6 +178,7 @@ class MainWindow(wx.Frame):
             filename = dlg.GetFilename()
             self.dirname = dlg.GetDirectory()
             self.statusbar.SetStatusText("Saving...")
+            create_backup(self.dirname, filename)
             path = os.path.join(self.dirname, filename)
             self.main_panel.bac.save(path)
             self.statusbar.SetStatusText(f"Saved {path}")

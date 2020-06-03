@@ -40,5 +40,6 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
         * Fixed Type22 not loading and saving properly
 0.3.1 - Fixed append/inserts 
 0.3.2 - Fixed paste/replace
+0.3.3 - Add automatic backup creation on saving
 ```
 
