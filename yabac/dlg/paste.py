@@ -1,4 +1,5 @@
 from collections import defaultdict
+from pyxenoverse.gui import get_first_item, get_next_item
 
 import wx
 
@@ -83,18 +84,18 @@ class PasteDialog(wx.Dialog):
 
     def find_next_available_index(self, item_type, entry, dependency, depend_value):
         max_value = 0
-        item = self.entry_list.GetFirstItem()
+        item = get_first_item(self.entry_list)
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
             if isinstance(data, item_type) and \
                     (not dependency or data[dependency] == depend_value) and data[entry] != 0xFFFF:
                 max_value = max(data[entry], max_value)
 
-            item = self.entry_list.GetNextItem(item)
+            item = get_next_item(self.entry_list, item)
         return max_value + 1
 
     def find(self, item_type, entry_type, value):
-        item = self.entry_list.GetFirstItem()
+        item = get_first_item(self.entry_list)
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
             if self.entry == data:
@@ -102,7 +103,7 @@ class PasteDialog(wx.Dialog):
                 continue
             elif isinstance(data, item_type) and data[entry_type] == value:
                 return 'Conflict Found!'
-            item = self.entry_list.GetNextItem(item)
+            item = get_next_item(self.entry_list, item)
         return ''
 
     def on_close(self, e):
