@@ -84,7 +84,7 @@ class PasteDialog(wx.Dialog):
 
     def find_next_available_index(self, item_type, entry, dependency, depend_value):
         max_value = 0
-        item = get_first_item(self.entry_list)
+        item = get_first_item(self.entry_list)[0]
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
             if isinstance(data, item_type) and \
@@ -95,7 +95,7 @@ class PasteDialog(wx.Dialog):
         return max_value + 1
 
     def find(self, item_type, entry_type, value):
-        item = get_first_item(self.entry_list)
+        item = get_first_item(self.entry_list)[0]
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
             if self.entry == data:

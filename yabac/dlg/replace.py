@@ -44,7 +44,7 @@ class ReplaceDialog(FindDialog):
 
         # Only do this if we have one selected item
         if len(selected) != 1:
-            self.find(get_first_item(self.entry_list), item_type, entry_type, find)
+            self.find(get_first_item(self.entry_list)[0], item_type, entry_type, find)
             return
         selected = selected[0]
         data = self.entry_list.GetItemData(selected)
@@ -66,7 +66,7 @@ class ReplaceDialog(FindDialog):
             self.status_bar.SetStatusText("Invalid Value")
             return None
         count = 0
-        item = get_first_item(self.entry_list)
+        item = get_first_item(self.entry_list)[0]
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
             if type(data) == item_type and data[entry_type] == find:
