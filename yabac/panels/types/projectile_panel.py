@@ -39,14 +39,13 @@ class ProjectilePanel(BasePanel):
         self.position_x = self.add_float_entry(self.entry_page, 'Position X')
         self.position_y = self.add_float_entry(self.entry_page, 'Position Y')
         self.position_z = self.add_float_entry(self.entry_page, 'Position Z')
-        self.skill_type = self.add_single_selection_entry(bsa_page, 'Skill Type', majorDimension=2, choices={
-            'CMN': 0x0,
-            'Awoken': 0x3,
-            'Super': 0x5,
-            'Ultimate': 0x6,
-            'Evasive': 0x7,
-            'Blast': 0x8,
-            'Unknown (0x9)': 0x9
+        self.skill_type = self.add_unknown_hex_entry(self.entry_page, 'Skill Type', showKnown=True, cols=3, knownValues={
+            0x0: 'CMN',
+            0x3: 'Awoken',
+            0x5: 'Super',
+            0x6: 'Ultimate',
+            0x7: 'Evasive',
+            0x8: 'Blast',
         })
         self.spawn_properties = self.add_multiple_selection_entry(spawn_page, 'Spawn Properties', cols=1, choices=[
             ('Duplicate', {
