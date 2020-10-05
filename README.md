@@ -42,5 +42,6 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
 0.3.2 - Fixed paste/replace
 0.3.3 - Add automatic backup creation on saving
 0.3.4 - Fixed paste/replace
+0.3.5 - Added BACType27, Fixed HomingMovement, renamed BACType18 to Physics and BACType26 to Extended Camera Control
 ```
 
