@@ -4,9 +4,10 @@ mapping_names = ['f_0c', 'f_10', 'f_14']
 mappings = {
     0x2: ('Damage', None, None),
     0x4: ('Ki', None, None),
-    0x7: ('Y-axisDegrees', None, None),
+    0x7: ('Y-axis Degrees', None, None),
+    0xb: ('Duration', None, None),
     0xf: ('Damage', None, None),
-    0x10: ('Projectile ID', None, None),
+    0x10: ('BAC Condition', None, None),
     0x13: ('Partset ID', None, None),
     0x14: ('Partset ID', None, None),
     0x16: ('Stamina', None, None),
@@ -20,6 +21,8 @@ mappings = {
     0x3c: ('Pause Length', None, None),
     0x43: ('Stamina cost', None, None),
     0x44: ('Damage', None, None),
+    0x4c: ('Super Soul ID', None, None),
+    0x4e: ('Skill Id', 'Skill Type', 'Upgrade Command')
 }
 
 MAPPINGS = {
@@ -28,11 +31,12 @@ MAPPINGS = {
     0x4: ('Give/take Ki', 'Ki', None, None),
     0x6: ('Invisibility', None, None, None),
     0x7: ('Rotate animation', 'Y-axis Degrees', None, None),
+    0xb: ('Override throw duration', 'Duration', None, None),
     0xc: ('Darken Screen', None, None, None),
     0xd: ('Activate transformation', None, None, None),
     0xe: ('Deactivate transformation', None, None, None),
     0xf: ('Damage user once', None, None, None),
-    0x10: ('Projectile type', 'Projectile Id', None, None),
+    0x10: ('Detonate Projectiles', 'BAC Condition', None, None),
     0x11: ('Swap bodies', None, None, None),
     0x12: ('Target/untarget', None, None, None),
     0x13: ('Set BCS Part', 'Partset Id', None, None),
@@ -59,6 +63,8 @@ MAPPINGS = {
     0x3f: ('Limit burst', None, None, None),
     0x43: ('Auto-dodge', 'Stamina cost', None, None),
     0x44: ('Damage x10', 'Damage', None, None),
+    0x4c: ('Activate Buff', 'Super Soul ID', None, None),
+    0x4e: ('Skill Upgrade', 'Skill Id', 'Skill Type', 'Upgrade Command')
 }
 
 

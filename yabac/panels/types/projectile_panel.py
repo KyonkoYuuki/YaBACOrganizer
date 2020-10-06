@@ -24,16 +24,19 @@ class ProjectilePanel(BasePanel):
             ('Spawn', {
                 'Spawn source': 0x0,
                 'Unknown (0x1)': 0x1,
+                'Unknown (0x2)': 0x2,
                 'User direction': 0x3
             }, False),
             (None, None, False),
             ('Location', {
                 'User': 0x0,
                 'Target (0x1)': 0x1,
+                'Unknown (0x2)': 0x2,
                 'Unknown (0x3)': 0x3,
                 'Unknown (0x4)': 0x4,
                 'Target (0x5)': 0x5,
                 'Unknown (0x6)': 0x6,
+                'Map (0x7)': 0x7,
             }, False)
         ])
         self.position_x = self.add_float_entry(self.entry_page, 'Position X')

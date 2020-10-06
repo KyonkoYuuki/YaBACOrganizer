@@ -11,8 +11,8 @@ class AccelerationMovementPanel(BasePanel):
         self.movement_flags = self.add_multiple_selection_entry(
             self.entry_page, 'Movement Flags', orient=wx.VERTICAL, cols=4, choices=[
                 (None, None, True),
-                ('', [None, None, 'Up', 'Down'], True),
-                (None, None, True),
+                ('', ['Allow Teleport', None, 'Up', 'Down'], True),
+                ('', [None, None, None, 'No Orientation'], True),
                 ('', ['Automatic in direction', 'Automatic towards opponent', 'Manual', 'Teleport to opponent'], True)
             ])
         self.u_0a = self.add_hex_entry(self.unknown_page, 'U_0A')
