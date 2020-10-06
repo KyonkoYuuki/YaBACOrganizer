@@ -18,6 +18,6 @@ class EffectPropertyControlPanel(BasePanel):
         self.effect_duration = self.add_num_entry(self.entry_page, "Effect Duration")
         self.flags = self.add_unknown_hex_entry(self.entry_page, "Flags")
 
-        self.u_0a = self.add_hex_entry(self.unknown_page, 'U_0A')
-        self.u_0c = self.add_hex_entry(self.unknown_page, 'U_0C')
-        self.u_0e = self.add_hex_entry(self.unknown_page, 'U_0E')
+        self.u_12 = self.add_hex_entry(self.unknown_page, 'U_12')
+        self.u_14 = self.add_hex_entry(self.unknown_page, 'U_14')
+        self.u_16 = self.add_hex_entry(self.unknown_page, 'U_16')
