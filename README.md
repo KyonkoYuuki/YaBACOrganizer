@@ -45,5 +45,6 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
 0.3.5 - Added BACType27, Fixed HomingMovement, renamed BACType18 to Physics and BACType26 to Extended Camera Control
 0.3.6 - Updated Transform Control, BCMCallback, Projectile, and Acceleration with new Types/Flags
 0.3.7 - Fixed BACType27 entries, swapped back x and y rotation for Camera
+0.3.8 - Fixed issues with copying entries
 ```
 
