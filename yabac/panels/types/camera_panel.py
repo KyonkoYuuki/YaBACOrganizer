@@ -27,6 +27,9 @@ class CameraPanel(BasePanel):
             'Unknown (0xd)': 0xd,
             'Heavy Rumble (0xe)': 0xe,
             'Extreme Rumble (0xf)': 0xf,
+            'Zoom into player (0x11)': 0x11,
+            'Activate Extended Camera (0x19)': 0x19,
+            'Deactivate Extended Camera (0x20)': 0x20,
         })
 
         self.bone_to_focus_on = self.add_single_selection_entry(
