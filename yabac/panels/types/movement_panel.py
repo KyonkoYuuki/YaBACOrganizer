@@ -2,7 +2,7 @@ import wx
 from yabac.panels.types import BasePanel, Page
 
 
-class AccelerationMovementPanel(BasePanel):
+class MovementPanel(BasePanel):
     def __init__(self, *args):
         BasePanel.__init__(self, *args)
         matrix_page = Page(self.notebook)

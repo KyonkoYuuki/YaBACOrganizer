@@ -10,7 +10,7 @@ from pyxenoverse.bac.sub_entry import ITEM_TYPES
 from yabac.panels.types.entry_panel import EntryPanel
 from yabac.panels.types.animation_panel import AnimationPanel
 from yabac.panels.types.hitbox_panel import HitboxPanel
-from yabac.panels.types.acceleration_movement_panel import AccelerationMovementPanel
+from yabac.panels.types.movement_panel import MovementPanel
 from yabac.panels.types.invulnerability_panel import InvulnerabilityPanel
 from yabac.panels.types.motion_adjust_panel import MotionAdjustPanel
 from yabac.panels.types.opponent_knockback_panel import OpponentKnockbackPanel
