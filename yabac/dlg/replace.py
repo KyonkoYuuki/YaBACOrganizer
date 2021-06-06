@@ -35,8 +35,8 @@ class ReplaceDialog(FindDialog):
         item_type = ITEM_TYPES[self.items.GetSelection()]
         entry_type = item_type.bac_record.__fields__[self.entry.GetSelection()]
         try:
-            find = int(self.find_ctrl.GetValue(), 0)
-            replace = int(self.replace_ctrl.GetValue(), 0)
+            find = float(self.find_ctrl.GetValue())
+            replace = float(self.replace_ctrl.GetValue())
         except ValueError:
             self.status_bar.SetStatusText("Invalid Value")
             return None
@@ -60,8 +60,8 @@ class ReplaceDialog(FindDialog):
         item_type = ITEM_TYPES[self.items.GetSelection()]
         entry_type = item_type.bac_record.__fields__[self.entry.GetSelection()]
         try:
-            find = int(self.find_ctrl.GetValue(), 0)
-            replace = int(self.replace_ctrl.GetValue(), 0)
+            find = float(self.find_ctrl.GetValue())
+            replace = float(self.replace_ctrl.GetValue())
         except ValueError:
             self.status_bar.SetStatusText("Invalid Value")
             return None
