@@ -68,7 +68,7 @@ MAPPINGS = {
 }
 
 
-class TransformControlPanel(BasePanel):
+class FunctionControlPanel(BasePanel):
     def __init__(self, *args):
 
         BasePanel.__init__(self, *args)

@@ -12,8 +12,8 @@ from yabac.panels.types.animation_panel import AnimationPanel
 from yabac.panels.types.hitbox_panel import HitboxPanel
 from yabac.panels.types.movement_panel import MovementPanel
 from yabac.panels.types.invulnerability_panel import InvulnerabilityPanel
-from yabac.panels.types.motion_adjust_panel import MotionAdjustPanel
-from yabac.panels.types.opponent_knockback_panel import OpponentKnockbackPanel
+from yabac.panels.types.time_scale_panel import TimeScalePanel
+from yabac.panels.types.tracking import TrackingPanel
 from yabac.panels.types.chain_attack_parameters_panel import ChainAttackParametersPanel
 from yabac.panels.types.bcm_callback_panel import BcmCallbackPanel
 from yabac.panels.types.effect_panel import EffectPanel
@@ -23,7 +23,7 @@ from yabac.panels.types.sound_panel import SoundPanel
 from yabac.panels.types.targeting_assistance_panel import TargetingAssistancePanel
 from yabac.panels.types.part_invisibility_panel import PartInvisibilityPanel
 from yabac.panels.types.animation_modification_panel import AnimationModificationPanel
-from yabac.panels.types.transform_control_panel import TransformControlPanel
+from yabac.panels.types.function_control_panel import FunctionControlPanel
 from yabac.panels.types.screen_effect_panel import ScreenEffectPanel
 from yabac.panels.types.throw_handler_panel import ThrowHandlerPanel
 from yabac.panels.types.physics_panel import PhysicsPanel

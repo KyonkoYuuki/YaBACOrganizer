@@ -1,7 +1,7 @@
 from yabac.panels.types import BasePanel
 
 
-class MotionAdjustPanel(BasePanel):
+class TimeScalePanel(BasePanel):
     def __init__(self, *args):
 
         BasePanel.__init__(self, *args)

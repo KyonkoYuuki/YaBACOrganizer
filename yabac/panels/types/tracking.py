@@ -1,7 +1,7 @@
 from yabac.panels.types import BasePanel
 
 
-class OpponentKnockbackPanel(BasePanel):
+class TrackingPanel(BasePanel):
     def __init__(self, *args):
 
         BasePanel.__init__(self, *args)
