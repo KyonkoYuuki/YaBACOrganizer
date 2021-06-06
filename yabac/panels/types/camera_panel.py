@@ -51,7 +51,8 @@ class CameraPanel(BasePanel):
         self.u_38 = self.add_hex_entry(self.unknown_page, 'U_38')
         self.u_3c = self.add_hex_entry(self.unknown_page, 'U_3C')
         self.u_40 = self.add_hex_entry(self.unknown_page, 'U_40')
-        self.u_44 = self.add_hex_entry(self.unknown_page, 'U_44')
+        self.u_42 = self.add_hex_entry(self.unknown_page, 'U_46', max=0xFFFF)
+        self.zoom_duration = self.add_num_entry(self.unknown_page, 'Zoom Duration')
         self.u_48 = self.add_hex_entry(self.unknown_page, 'U_48', max=0xFFFF)
         self.camera_flags = self.add_multiple_selection_entry(self.entry_page, 'Camera Flags', choices=[
             ('Unknown', None, True),
