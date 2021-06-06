@@ -14,6 +14,7 @@ from pyxenoverse.gui.file_drop_target import FileDropTarget
 
 from yabac.dlg.paste import PasteDialog
 from yabac.dlg.convert import ConvertDialog
+from yabac.dlg.offset import OffsetDialog
 
 
 class MainPanel(wx.Panel):
@@ -35,6 +36,8 @@ class MainPanel(wx.Panel):
         self.insert_id = wx.NewId()
         self.add_copy_id = wx.NewId()
         self.insert_copy_id = wx.NewId()
+        self.offset_id = wx.NewId()
+        self.inc_offset_id = wx.NewId()
         self.Bind(wx.EVT_MENU, self.on_open, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.on_save, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, self.on_delete, id=wx.ID_DELETE)
@@ -45,10 +48,15 @@ class MainPanel(wx.Panel):
         self.Bind(wx.EVT_MENU, self.on_insert_bac_entry, id=self.insert_id)
         self.Bind(wx.EVT_MENU, partial(self.on_add_copy, append=True), id=self.add_copy_id)
         self.Bind(wx.EVT_MENU, partial(self.on_add_copy, append=False), id=self.insert_copy_id)
+        self.Bind(wx.EVT_MENU, self.on_offset, id=self.offset_id)
+        self.Bind(wx.EVT_MENU, self.on_offset_inc, id=self.inc_offset_id)
 
         accelerator_table = wx.AcceleratorTable([
             (wx.ACCEL_CTRL, ord('c'), wx.ID_COPY),
+            (wx.ACCEL_CTRL, ord('b'), self.offset_id),
+            (wx.ACCEL_CTRL, ord('n'), self.inc_offset_id),
             (wx.ACCEL_CTRL, ord('v'), wx.ID_PASTE),
+            (wx.ACCEL_CTRL, ord('a'), self.add_copy_id),
             (wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE),
         ])
         self.entry_list.SetAcceleratorTable(accelerator_table)
@@ -97,6 +105,21 @@ class MainPanel(wx.Panel):
         self.enable_selected(delete, single=False)
         copy = menu.Append(wx.ID_COPY, "Copy\tCtrl+C", "&Copy entry(s)")
         self.enable_selected(copy)
+        offset = menu.Append(self.offset_id, "Offset Start Time\tCtrl+B", "&offset entry(s) start time")
+        self.enable_selected(offset, single=False)
+        offset_incremental = menu.Append(self.inc_offset_id, "Incrementaly Offset Start Time\tCtrl+N", "&incrementaly offset entry(s) start time")
+        self.enable_selected(offset_incremental, single=False)
+
+
+        for sel in self.entry_list.GetSelections():
+            entry = self.entry_list.GetItemData(sel)
+            entry_class_name = entry.__class__.__name__
+
+            if entry.get_name() == "Entry" or entry.get_name() == "SubEntry":
+                offset.Enable(False)
+                offset_incremental.Enable(False)
+                break
+
         menu.AppendSeparator()
         # Paste options
         paste_data = self.get_paste_data(self.entry_list.GetSelections(), False)
@@ -117,7 +140,7 @@ class MainPanel(wx.Panel):
                 self.enable_selected(append, entry=paste_data)
                 self.Bind(wx.EVT_MENU, partial(self.on_add_copy, append=True), append)
             else:
-                add = menu.Append(-1, f"Add {name} Copy")
+                add = menu.Append(-1, f"Add {name} Copy\tCtrl+A")
                 self.enable_selected(add, entry=paste_data)
                 self.Bind(wx.EVT_MENU, partial(self.on_add_copy, append=True), add)
 
@@ -229,7 +252,7 @@ class MainPanel(wx.Panel):
             index += 1
         else:
             new_item = self.entry_list.AppendItem(
-                parent, f'{entry.index}: {entry.start_time}', data=entry)
+                parent, f'{entry.start_time}', data=entry)
         self.select_item(new_item)
         self.refresh = True
         self.on_select(None)
@@ -472,6 +495,44 @@ class MainPanel(wx.Panel):
         self.reindex()
         pub.sendMessage('set_status_bar', text="Deleted successfully")
 
+    def on_offset(self, _):
+        selected = self.entry_list.GetSelections()
+        offset_val = 0
+        with OffsetDialog(self, "Offset", -1) as dlg:
+            if dlg.ShowModal() != wx.ID_OK:
+                return
+            offset_val = dlg.GetValue()
+
+        for sel in selected:
+            entry = self.entry_list.GetItemData(sel)
+            entry.start_time += offset_val
+            self.update_item(sel, entry)
+            self.reindex()
+
+
+        pub.sendMessage('set_status_bar', text=f'Offset {len(selected)} Entries')
+
+    def on_offset_inc(self, _):
+        selected = self.entry_list.GetSelections()
+        inc = 0
+        with OffsetDialog(self, "Incremental Offset", -1) as dlg:
+            if dlg.ShowModal() != wx.ID_OK:
+                return
+            offset_val = dlg.GetValue()
+            inc = offset_val
+
+
+        for sel in selected:
+            entry = self.entry_list.GetItemData(sel)
+            entry.start_time += offset_val
+            self.update_item(sel, entry)
+            self.reindex()
+            offset_val += inc
+
+
+
+        pub.sendMessage('set_status_bar', text=f'incrementally Offset {len(selected)} Entries')
+
     def on_copy(self, _):
         selected = self.entry_list.GetSelections()
         if len(selected) > 1:
@@ -560,6 +621,15 @@ class MainPanel(wx.Panel):
         paste_data = self.get_paste_data(selected)
         if not paste_data:
             return
+
+        item = selected[0]
+        entry = self.entry_list.GetItemData(item)
+        if type(paste_data) != type(entry):
+            with wx.MessageDialog(self, f"Unable to add '{paste_data.get_readable_name()}' type "
+                                  f"onto '{entry.get_readable_name()}'") as dlg:
+                dlg.ShowModal()
+            return
+
         class_name = paste_data.get_name()
         if class_name == 'Entry':
             new_entry, new_entry_data = self.add_bac_entry(append, selected[0])
