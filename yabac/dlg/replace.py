@@ -35,8 +35,8 @@ class ReplaceDialog(FindDialog):
         item_type = ITEM_TYPES[self.items.GetSelection()]
         entry_type = item_type.bac_record.__fields__[self.entry.GetSelection()]
         try:
-            find = float(self.find_ctrl.GetValue())
-            replace = float(self.replace_ctrl.GetValue())
+            find = self.get_value(self.find_ctrl)
+            replace = self.get_value(self.replace_ctrl)
         except ValueError:
             self.status_bar.SetStatusText("Invalid Value")
             return None
@@ -60,16 +60,19 @@ class ReplaceDialog(FindDialog):
         item_type = ITEM_TYPES[self.items.GetSelection()]
         entry_type = item_type.bac_record.__fields__[self.entry.GetSelection()]
         try:
-            find = float(self.find_ctrl.GetValue())
-            replace = float(self.replace_ctrl.GetValue())
-        except ValueError:
+            find = self.get_value(self.find_ctrl)
+            replace = self.get_value(self.replace_ctrl)
+        except ValueError as e:
+            print(e)
             self.status_bar.SetStatusText("Invalid Value")
             return None
         count = 0
         item = get_first_item(self.entry_list)[0]
         while item.IsOk():
             data = self.entry_list.GetItemData(item)
-            if type(data) == item_type and data[entry_type] == find:
+            if type(data) == item_type and (
+                    data[entry_type] == find or
+                    (isinstance(data[entry_type], float) and abs(data[entry_type] - find) < 0.000001)):
                 data[entry_type] = replace
                 count += 1
             item = get_next_item(self.entry_list, item)
