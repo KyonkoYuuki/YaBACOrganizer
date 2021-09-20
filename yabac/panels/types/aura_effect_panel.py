@@ -4,7 +4,7 @@ from yabac.panels.types import BasePanel
 class AuraEffectPanel(BasePanel):
     def __init__(self, *args):
         BasePanel.__init__(self, *args)
-        self.type = self.add_single_selection_entry(self.entry_page, 'Type', majorDimension=2, choices={
+        self.aura_type = self.add_single_selection_entry(self.entry_page, 'Type', majorDimension=2, choices={
             'Boost start': 0x0,
             'Boost loop': 0x1,
             'Boost end': 0x2,

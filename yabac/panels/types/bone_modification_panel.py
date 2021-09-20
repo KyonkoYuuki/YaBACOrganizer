@@ -2,7 +2,7 @@ import wx
 from yabac.panels.types import BasePanel
 
 
-class AnimationModificationPanel(BasePanel):
+class BoneModificationPanel(BasePanel):
     def __init__(self, *args):
 
         BasePanel.__init__(self, *args)

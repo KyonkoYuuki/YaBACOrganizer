@@ -97,10 +97,12 @@ class MainPanel(wx.Panel):
         insert = menu.Append(self.insert_id, "&Insert Entry", "Insert BAC Entry")
         self.enable_selected(insert)
         menu.AppendSubMenu(sub_entry_menu, "Add &Subentry")
+        typeindex = 0
         for bac_value, bac_type in ITEM_TYPES.items():
-            sub_entry_item = sub_entry_menu.Append(-1, bac_type.__name__)
+            sub_entry_item = sub_entry_menu.Append(-1, bac_type.__name__ + " - BACType" + str(typeindex))
             self.enable_selected(sub_entry_item)
             self.Bind(wx.EVT_MENU, partial(self.on_add_item, bac_value=bac_value), sub_entry_item)
+            typeindex += 1
         delete = menu.Append(wx.ID_DELETE, "Delete", "&Delete entry(s)")
         self.enable_selected(delete, single=False)
         copy = menu.Append(wx.ID_COPY, "Copy\tCtrl+C", "&Copy entry(s)")
@@ -281,7 +283,53 @@ class MainPanel(wx.Panel):
 
     def build_sub_entry_tree(self, sub_entry_item, sub_entry):
         for item in sub_entry.items:
-            self.entry_list.AppendItem(sub_entry_item, str(item.start_time), data=item)
+
+            # UNLEASHED: check if subentry type is animation, if it is then show the name in the list for easier navigation
+            if sub_entry.get_type_name() == "Animation":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.ean_type_dict.get(item.ean_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "Hitbox":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.bdm_type_dict.get(item.bdm_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "Effect":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.eepk_type_dict.get(item.eepk_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "Camera":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.ean_type_dict.get(item.ean_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "Sound":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.acb_type_dict.get(item.acb_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "Projectile":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.skill_type_dict.get(item.skill_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "System":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.function_type_dict.get(item.function_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "TargetingAssistance":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.rotation_axis_dict.get(item.rotation_axis, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "EyeMovement":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.direction_type_dict.get(item.direction_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "HomingMovement":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.homingmovement_type_dict.get(item.homingmovement_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "AuraEffect":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.aura_type_dict.get(item.aura_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "Physics":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.function_type_dict.get(item.function_type, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "PartInvisibility":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.bcs_part_id_dict.get(item.bcs_part_id, 'Unknown'), data=item)
+            elif sub_entry.get_type_name() == "ScreenEffect":
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
+                                           item.bpe_effect_id_dict.get(item.bpe_effect_id, 'Unknown'), data=item)
+
+            else:
+                self.entry_list.AppendItem(sub_entry_item, str(item.start_time), data=item)
 
     def reindex(self, selected=None):
         for i, entry in enumerate(self.bac.entries):
@@ -315,7 +363,51 @@ class MainPanel(wx.Panel):
                     for entry in sub_entry.items:
                         item = get_next_item(self.entry_list, item)
                         self.entry_list.SetItemData(item, entry)
-                        self.entry_list.SetItemText(item, str(entry.start_time))
+                        #UNLEASHED: do the same as the build_sub_tree function
+                        if sub_entry.get_type_name() == "Animation":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.ean_type_dict.get(entry.ean_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "Hitbox":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.bdm_type_dict.get(entry.bdm_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "Effect":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.eepk_type_dict.get(entry.eepk_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "Camera":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.ean_type_dict.get(entry.ean_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "Sound":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.acb_type_dict.get(entry.acb_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "Projectile":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.skill_type_dict.get(entry.skill_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "System":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.function_type_dict.get(entry.function_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "TargetingAssistance":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.rotation_axis_dict.get(entry.rotation_axis, 'Unknown'))
+                        elif sub_entry.get_type_name() == "EyeMovement":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.direction_type_dict.get(entry.direction_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "HomingMovement":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.homingmovement_type_dict.get(entry.homingmovement_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "AuraEffect":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.aura_type_dict.get(entry.aura_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "Physics":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.function_type_dict.get(entry.function_type, 'Unknown'))
+                        elif sub_entry.get_type_name() == "PartInvisibility":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.bcs_part_id_dict.get(entry.bcs_part_id, 'Unknown'))
+                        elif sub_entry.get_type_name() == "ScreenEffect":
+                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
+                                                        entry.bpe_effect_id_dict.get(entry.bpe_effect_id, 'Unknown'))
+                        else:
+                            self.entry_list.SetItemText(item, str(entry.start_time))
             item = get_next_item(self.entry_list, item)
             if to_delete:
                 self.entry_list.Delete(to_delete)
@@ -420,6 +512,8 @@ class MainPanel(wx.Panel):
         # Add it to sub_entry
         sub_entry_data.items.append(new_bac_type)
         sub_entry_data.items.sort(key=lambda n: n.start_time)
+        #UNLEASHED: not entry should have duration as 0, so lets just set to 1 inititally
+        new_bac_type.duration = 1
 
         # Add to correct place in tree list
         index = 0
@@ -505,7 +599,16 @@ class MainPanel(wx.Panel):
 
         for sel in selected:
             entry = self.entry_list.GetItemData(sel)
-            entry.start_time += offset_val
+            if entry.start_time + offset_val < 0: # offset by a negetive value
+                temp_offset_val = offset_val + entry.start_time #subtrack offset amount by the available start time
+                entry.start_time = 0 #start time should be zero now, and temp_offset_val is the remining value
+                entry.duration += temp_offset_val # subtrack duration from the reminng value (do the same for duration?)
+            else:
+                entry.start_time += offset_val
+
+
+        #update later to avoid offsetting twice
+        for sel in selected:
             self.update_item(sel, entry)
             self.reindex()
 
@@ -524,10 +627,21 @@ class MainPanel(wx.Panel):
 
         for sel in selected:
             entry = self.entry_list.GetItemData(sel)
-            entry.start_time += offset_val
+            if entry.start_time + offset_val < 0: # offset by a negetive value
+                temp_offset_val = offset_val + entry.start_time #subtrack offset amount by the available start time
+                entry.start_time = 0 #start time should be zero now, and temp_offset_val is the remining value
+                entry.duration += temp_offset_val # subtrack duration from the reminng value (do the same for duration?)
+            else:
+                entry.start_time += offset_val
+
+            offset_val += inc
+
+
+
+        #update later to avoid offsetting twice
+        for sel in selected:
             self.update_item(sel, entry)
             self.reindex()
-            offset_val += inc
 
 
 
@@ -619,6 +733,7 @@ class MainPanel(wx.Panel):
     def on_add_copy(self, _, append=True):
         selected = self.entry_list.GetSelections()
         paste_data = self.get_paste_data(selected)
+
         if not paste_data:
             return
 
@@ -629,6 +744,8 @@ class MainPanel(wx.Panel):
                                   f"onto '{entry.get_readable_name()}'") as dlg:
                 dlg.ShowModal()
             return
+
+        
 
         class_name = paste_data.get_name()
         if class_name == 'Entry':
@@ -648,6 +765,7 @@ class MainPanel(wx.Panel):
             new_item, new_item_data = self.add_item(paste_data.type, paste_data)
             new_item_data.paste(paste_data)
         self.reindex()
+        self.on_select(None)
         pub.sendMessage('set_status_bar', text=f"Added {paste_data.get_readable_name()}")
 
     def set_focus(self, focus):

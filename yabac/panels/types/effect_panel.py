@@ -7,8 +7,8 @@ class EffectPanel(BasePanel):
         BasePanel.__init__(self, *args)
         eepk_page = Page(self.notebook)
 
-        self.notebook.InsertPage(1, eepk_page, 'EEPK/Bone')
-        self.type = self.add_single_selection_entry(eepk_page, 'Type', majorDimension=3, choices={
+        self.notebook.InsertPage(1, eepk_page, 'Spawn/Bone')
+        self.eepk_type = self.add_single_selection_entry(self.entry_page, 'Type', majorDimension=3, choices={
             'Global': 0x0,
             'Stage BG': 0x1,
             'Player': 0x2,
@@ -19,7 +19,7 @@ class EffectPanel(BasePanel):
             'Unknown (0x8)': 0x8,
             'Ki blast': 0x9,
             'Unknown (0xa)': 0xa,
-            'Stage (0xb)': 0xa,
+            'Stage (0xb)': 0xb,
         })
 
         self.bone_link = self.add_single_selection_entry(eepk_page, 'Bone Link', majorDimension=5, choices=BONE_TYPES)
@@ -31,12 +31,12 @@ class EffectPanel(BasePanel):
         })
 
         self.effect_id = self.add_num_entry(self.entry_page, 'Effect Id')
-        self.u_14 = self.add_hex_entry(self.unknown_page, 'U_14')
-        self.u_18 = self.add_hex_entry(self.unknown_page, 'U_18')
-        self.u_1c = self.add_hex_entry(self.unknown_page, 'U_1C')
-        self.u_20 = self.add_hex_entry(self.unknown_page, 'U_20')
-        self.u_24 = self.add_hex_entry(self.unknown_page, 'U_24')
-        self.u_28 = self.add_hex_entry(self.unknown_page, 'U_28')
+        self.u_14 = self.add_float_entry(eepk_page, 'Position X')
+        self.u_18 = self.add_float_entry(eepk_page, 'Position Y')
+        self.u_1c = self.add_float_entry(eepk_page, 'Position Z')
+        self.u_20 = self.add_float_entry(eepk_page, 'Rotation X')
+        self.u_24 = self.add_float_entry(eepk_page, 'Rotation Y')
+        self.u_28 = self.add_float_entry(eepk_page, 'Rotation Z')
         self.on_off_switch = self.add_unknown_hex_entry(
             self.entry_page, 'On/Off switch', knownValues={
                 0x0: 'On',

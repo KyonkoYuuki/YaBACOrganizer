@@ -9,7 +9,7 @@ class PartInvisibilityPanel(BasePanel):
             'Face base': 0x0,
             'Face forehead': 0x1,
             'Face eye': 0x2,
-            'Face nose ': 0x3,
+            'Face nose': 0x3,
             'Face ear': 0x4,
             'Hair': 0x5,
             'Bust': 0x6,

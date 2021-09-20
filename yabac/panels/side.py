@@ -22,8 +22,8 @@ from yabac.panels.types.camera_panel import CameraPanel
 from yabac.panels.types.sound_panel import SoundPanel
 from yabac.panels.types.targeting_assistance_panel import TargetingAssistancePanel
 from yabac.panels.types.part_invisibility_panel import PartInvisibilityPanel
-from yabac.panels.types.animation_modification_panel import AnimationModificationPanel
-from yabac.panels.types.function_control_panel import FunctionControlPanel
+from yabac.panels.types.bone_modification_panel import BoneModificationPanel
+from yabac.panels.types.system_panel import SystemPanel
 from yabac.panels.types.screen_effect_panel import ScreenEffectPanel
 from yabac.panels.types.throw_handler_panel import ThrowHandlerPanel
 from yabac.panels.types.physics_panel import PhysicsPanel
@@ -32,7 +32,7 @@ from yabac.panels.types.homing_movement_panel import HomingMovementPanel
 from yabac.panels.types.eye_movement_panel import EyeMovementPanel
 from yabac.panels.types.type22_panel import Type22Panel
 from yabac.panels.types.transparency_effect_panel import TransparencyEffectPanel
-from yabac.panels.types.dual_skill_data_panel import DualSkillDataPanel
+from yabac.panels.types.dual_skill_handler_panel import DualSkillHandlerPanel
 from yabac.panels.types.charge_attack_parameters_panel import ChargeAttackParametersPanel
 from yabac.panels.types.extended_camera_control_panel import ExtendedCameraControlPanel
 from yabac.panels.types.effect_property_control_panel import EffectPropertyControlPanel

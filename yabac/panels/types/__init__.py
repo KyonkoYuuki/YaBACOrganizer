@@ -9,6 +9,7 @@ from pyxenoverse.gui.ctrl.multiple_selection_box import MultipleSelectionBox
 from pyxenoverse.gui.ctrl.single_selection_box import SingleSelectionBox
 from pyxenoverse.gui.ctrl.text_ctrl import TextCtrl
 from pyxenoverse.gui.ctrl.unknown_hex_ctrl import UnknownHexCtrl
+from pyxenoverse.gui.ctrl.num_ctrl import NumCtrl
 
 MAX_UINT16 = 0xFFFF
 MAX_UINT32 = 0xFFFFFFFF
@@ -77,7 +78,8 @@ class BasePanel(wx.Panel):
             self.entry_page, 'Character Type', -1, choices={
                 'Both': 0x0,
                 'CAC Only': 0x01,
-                'Roster Only': 0x02
+                'Roster Only': 0x02,
+                'Legacy': 0x05
             })
         # self.Bind(wx.EVT_SET_FOCUS, self.on_focus)
         self.Bind(wx.EVT_TEXT, self.on_edit)
@@ -110,6 +112,13 @@ class BasePanel(wx.Panel):
             kwargs['size'] = (150, -1)
         kwargs['min'], kwargs['max'] = 0, 65535
         return wx.SpinCtrl(panel, *args, **kwargs)
+
+    @add_entry
+    def add_unknown_num_entry(self, panel, _, *args, **kwargs):
+        if 'size' not in kwargs:
+            kwargs['size'] = (150, -1)
+        kwargs['min'], kwargs['max'] = 0, 65535
+        return NumCtrl(panel, *args, **kwargs)
 
     @add_entry
     def add_single_selection_entry(self, panel, _, *args, **kwargs):
@@ -173,7 +182,12 @@ class BasePanel(wx.Panel):
         control = self.__getattribute__(name)
         if not control.IsEnabled():
             control.Enable()
-            control.SetValue(self.saved_values.get(name, default))
+            #UNLEASHED: what is this? commented out because it because
+            #the previous value gets saved as 0 after the control gets disabled
+            #and renabing it restores that saved value (which is 0)
+            #even though the actual value might not be 0
+            #we are gonna read the data from the entry anyway, so i don't understand the saved value thing
+            #control.SetValue(self.saved_values.get(name, default))
 
     def load_entry(self, item, entry):
         self.item = item
@@ -186,7 +200,41 @@ class BasePanel(wx.Panel):
         self.edit_thread = None
         if self.entry is None:
             return
-        start_time = self.entry.start_time
+        start_time_tmp = self.entry.start_time
+
+        #create the backup tmp's, but make sure its the correct type so no NULL val is returned
+        #is this needed? is there an easier way  to write this?
+        if self.entry.bac_record.__name__ == "BACAnimation":
+            ean_type_tmp = self.entry.ean_type
+        elif self.entry.bac_record.__name__ == "BACHitbox":
+            bdm_type_tmp = self.entry.bdm_type
+        elif self.entry.bac_record.__name__ == "BACEffect":
+            eepk_type_tmp = self.entry.eepk_type
+        elif self.entry.bac_record.__name__ == "BACCamera":
+            ean_type_tmp = self.entry.ean_type
+        elif self.entry.bac_record.__name__ == "BACSound":
+            acb_type_tmp = self.entry.acb_type
+        elif self.entry.bac_record.__name__ == "BACProjectile":
+            skill_type_tmp = self.entry.skill_type
+        elif self.entry.bac_record.__name__ == "BACSystem":
+            function_type_tmp = self.entry.function_type
+        elif self.entry.bac_record.__name__ == "BACTargetingAssistance":
+            rotation_axis_tmp = self.entry.rotation_axis
+        elif self.entry.bac_record.__name__ == "BACEyeMovement":
+            direction_type_tmp = self.entry.direction_type
+        elif self.entry.bac_record.__name__ == "BACAuraEffect":
+            aura_type_tmp = self.entry.aura_type
+        elif self.entry.bac_record.__name__ == "BACPhysics":
+            function_type_tmp = self.entry.function_type
+        elif self.entry.bac_record.__name__ == "BACPartInvisibility":
+            bcs_part_id_tmp = self.entry.bcs_part_id
+        elif self.entry.bac_record.__name__ == "BACScreenEffect":
+            bpe_effect_id_tmp = self.entry.bpe_effect_id
+
+
+        do_update_startime = False
+        do_update_maintype = False
+
         for name in self.entry.__fields__:
             control = self[name]
             # SpinCtrlDoubles suck
@@ -199,9 +247,51 @@ class BasePanel(wx.Panel):
             else:
                 self.entry[name] = control.GetValue()
 
-        if self.entry.start_time != start_time:
+        if self.entry.start_time != start_time_tmp:
+            do_update_startime = True
+
+
+        ##UNLEASHED: check exclusive type updates
+        if self.entry.bac_record.__name__ == "BACAnimation":
+            do_update_maintype = True if self.entry.ean_type != ean_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACHitbox":
+            do_update_maintype = True if self.entry.bdm_type != bdm_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACEffect":
+            do_update_maintype = True if self.entry.eepk_type != eepk_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACCamera":
+            do_update_maintype = True if self.entry.ean_type != ean_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACSound":
+            do_update_maintype = True if self.entry.acb_type != acb_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACProjectile":
+            do_update_maintype = True if self.entry.skill_type != skill_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACSystem":
+            do_update_maintype = True if self.entry.function_type != function_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACTargetingAssistance":
+            do_update_maintype = True if self.entry.rotation_axis != rotation_axis_tmp else False
+        elif self.entry.bac_record.__name__ == "BACEyeMovement":
+            do_update_maintype = True if self.entry.direction_type != direction_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACAuraEffect":
+            do_update_maintype = True if self.entry.aura_type != aura_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACPhysics":
+            do_update_maintype = True if self.entry.function_type != function_type_tmp else False
+        elif self.entry.bac_record.__name__ == "BACPartInvisibility":
+            do_update_maintype = True if self.entry.bcs_part_id != bcs_part_id_tmp else False
+        elif self.entry.bac_record.__name__ == "BACScreenEffect":
+            do_update_maintype = True if self.entry.bpe_effect_id != bpe_effect_id_tmp else False
+
+
+        if do_update_startime:
             pub.sendMessage('update_item', item=self.item, entry=self.entry)
             pub.sendMessage('reindex')
+        if do_update_maintype:
+            pub.sendMessage('reindex')
+
+
+
+
+
+
+
 
     def focus_on(self, entry):
         if not self.IsShown():

@@ -7,7 +7,7 @@ class OffsetDialog(wx.Dialog):
         super().__init__(parent, *args, **kw)
         self.SetTitle(Title)
 
-        self.offset_ctrl = wx.SpinCtrl(self, -1, '', size=(150, -1), style=wx.TE_PROCESS_ENTER)
+        self.offset_ctrl = wx.SpinCtrl(self, -1, '', size=(150, -1), style=wx.TE_PROCESS_ENTER, min=-65535, max=65535)
         # self.find_ctrl.Bind(wx.EVT_TEXT_ENTER, self.on_find)
         self.offset_ctrl.SetFocus()
 
