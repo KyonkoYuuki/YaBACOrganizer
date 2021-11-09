@@ -8,7 +8,7 @@ class EffectPanel(BasePanel):
         eepk_page = Page(self.notebook)
 
         self.notebook.InsertPage(1, eepk_page, 'Spawn/Bone')
-        self.eepk_type = self.add_single_selection_entry(self.entry_page, 'Type', majorDimension=3, choices={
+        self.eepk_type = self.add_single_selection_entry(self.entry_page, 'EEPK Type', majorDimension=3, choices={
             'Global': 0x0,
             'Stage BG': 0x1,
             'Player': 0x2,
@@ -31,12 +31,12 @@ class EffectPanel(BasePanel):
         })
 
         self.effect_id = self.add_num_entry(self.entry_page, 'Effect Id')
-        self.u_14 = self.add_float_entry(eepk_page, 'Position X')
-        self.u_18 = self.add_float_entry(eepk_page, 'Position Y')
-        self.u_1c = self.add_float_entry(eepk_page, 'Position Z')
-        self.u_20 = self.add_float_entry(eepk_page, 'Rotation X')
-        self.u_24 = self.add_float_entry(eepk_page, 'Rotation Y')
-        self.u_28 = self.add_float_entry(eepk_page, 'Rotation Z')
+        self.position_x = self.add_float_entry(eepk_page, 'Position X')
+        self.position_y = self.add_float_entry(eepk_page, 'Position Y')
+        self.position_z = self.add_float_entry(eepk_page, 'Position Z')
+        self.rotation_x = self.add_float_entry(eepk_page, 'Rotation X')
+        self.rotation_y = self.add_float_entry(eepk_page, 'Rotation Y')
+        self.rotation_z = self.add_float_entry(eepk_page, 'Rotation Z')
         self.on_off_switch = self.add_unknown_hex_entry(
             self.entry_page, 'On/Off switch', knownValues={
                 0x0: 'On',

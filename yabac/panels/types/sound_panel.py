@@ -43,23 +43,23 @@ class SoundPanel(BasePanel):
         #         'Enable Pitch/reverb effects': 0x4,
         #         'Stop when BAC entry ends': 0x8
         # })
-        self.u_0a = self.add_multiple_selection_entry(self.entry_page, 'Sound Flags', choices=[
+        self.sound_flags = self.add_multiple_selection_entry(self.entry_page, 'Sound Flags', choices=[
             ('Sound Options #1', [
-                'Unknown (0x1)',
+                'Mark sound for fade out',
                 'Unknown (0x2)',
-                "Unknown (0x4)",
-                'Unknown (0x8)'
+                "Fade out marked sound",
+                'Fade out when skill ends'
             ], True),
             ('Sound Options #2', [
                 'Unknown (0x1)',
                 'Unknown (0x2)',
-                "Unknown (0x4)",
+                "Fade out when BAC entry ends",
                 'Unknown (0x8)'
             ], True),
             ('Sound Options #3', [
                 'Unknown (0x1)',
                 'Unknown (0x2)',
-                "Unknown (0x4)",
+                "Pitch and Reverb",
                 'Stop when BAC entry is exited'
             ], True)
         ])

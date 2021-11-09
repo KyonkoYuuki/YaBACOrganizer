@@ -13,7 +13,7 @@ class ProjectilePanel(BasePanel):
         self.notebook.InsertPage(2, spawn_page, 'Spawn')
 
         #UNLEASHED: skill type includes extra props
-        self.skill_type  = self.add_multiple_selection_entry(self.entry_page, 'Skill/BSA Flags',  majorDimension=2,  choices=[
+        self.skill_bsa_flags  = self.add_multiple_selection_entry(self.entry_page, 'Skill/BSA Flags',  majorDimension=2,  choices=[
             ('Skill/BSA Options #1', {
                  'None': 0x0,
                  'Terminate Previous Projectile': 0x1,
@@ -32,11 +32,11 @@ class ProjectilePanel(BasePanel):
             }, False)
         ])
         self.skill_id = self.add_num_entry(self.entry_page, 'Skill Id')
-        self.can_use_cmn_bsa = self.add_single_selection_entry(self.entry_page, 'Can Use CMN BSA', choices={
+        self.use_cmn_bsa = self.add_single_selection_entry(self.entry_page, 'Use CMN BSA', choices={
             'No': 0x0,
             'Yes': 0xffff
         })
-        self.projectile_id = self.add_num_entry(self.entry_page, 'Projectile ID')
+        self.bsa_id = self.add_num_entry(self.entry_page, 'BSA ID')
         self.bone_to_spawn_from = self.add_single_selection_entry(
             bsa_page, 'Bone to Spawn From', majorDimension=5, choices=BONE_TYPES)
 
@@ -50,10 +50,10 @@ class ProjectilePanel(BasePanel):
             (None, None, False),
             ('Location', {
                 'User': 0x0,
-                'Target (0x1)': 0x1,
+                'Spawn source (Target) (0x1)': 0x1,
                 'Unknown (0x2)': 0x2,
                 'Unknown (0x3)': 0x3,
-                'Unknown (0x4)': 0x4,
+                'User direction (Target)': 0x4,
                 'Target (0x5)': 0x5,
                 'Unknown (0x6)': 0x6,
                 'Map (0x7)': 0x7,
@@ -79,27 +79,29 @@ class ProjectilePanel(BasePanel):
         #     }, False)
         # ])
         self.projectile_health = self.add_num_entry(self.entry_page, 'Projectile Health', max=0xFFFFFFFF)
-        self.u_2e = self.add_multiple_selection_entry(spawn_page, 'Projectile Flags', choices=[
+        self.projectile_flags = self.add_multiple_selection_entry(spawn_page, 'Projectile Flags',majorDimension=2, choices=[
             ('Projectile Options #1', [
                 'Unknown (0x1)',
                 'Unknown (0x2)',
                 "Unknown (0x4)",
                 'Unknown (0x8)'
             ], True),
-            ('Projectile Options #2', [
-                'Unknown (0x1)',
-                'Unknown (0x2)',
-                "Mark Projectile",
-                'Mark Projectile With Unique ID'
-            ], True),
-            ('Projectile Options #3', [
+            ('Marking', {
+                'None': 0x0,
+                'Dupilcate Projectile For Every Opponent': 0x1,
+                'Unknown (0x2)': 0x2,
+                'Mark Projectile with Random ID': 0x4,
+                'Mark Projectile Unique ID (Roster)': 0x8,
+                'Mark Projectile Unique ID (CaC)': 0xC
+            }, False),
+            ('Conditions', [
                 'Announce to BCM',
                 'Unknown (0x2)',
                 "Unknown (0x4)",
-                'Unknown (0x8)'
+                'Enable Loop'
             ], True)
         ])
-        self.u_34 = self.add_num_entry(spawn_page, 'Unique ID', max=0xFFFF)
+        self.unique_id = self.add_num_entry(spawn_page, 'Unique ID', max=0xFFFF)
         self.u_38 = self.add_hex_entry(self.unknown_page, 'U_38')
         self.u_3c = self.add_hex_entry(self.unknown_page, 'U_3C')
 

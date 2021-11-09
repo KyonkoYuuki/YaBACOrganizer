@@ -13,7 +13,7 @@ class CameraPanel(BasePanel):
         self.notebook.InsertPage(3, interpolation_page, 'Interpolation')
 
         self.ean_type = self.add_single_selection_entry(ean_page, 'EAN Type', majorDimension=3, choices={
-            'Basic Lock (0x0)': 0x0,
+            'Rumble (0x0)': 0x0,
             'Heavy Rumble (0x1)': 0x1,
             'Extreme Rumble (0x2)': 0x2,
             'CMN.cam.ean': 0x3,
@@ -29,8 +29,9 @@ class CameraPanel(BasePanel):
             'Unknown (0xd)': 0xd,
             'Heavy Rumble (0xe)': 0xe,
             'Extreme Rumble (0xf)': 0xf,
-            'Unknown (0x14)': 0x14,
             'Zoom into player (0x11)': 0x11,
+            'Unknown (0x14)': 0x14,
+            'Unknown (0x16)': 0x16,
             'Activate Extended Camera (0x19)': 0x19,
             'Unknown (0x1A)': 0x1A,
             'Deactivate Extended Camera (0x20)': 0x20,
@@ -52,19 +53,19 @@ class CameraPanel(BasePanel):
         self.y_z_disposition = self.add_float_entry(info_page, 'Y/Z Disposition')
         self.zoom = self.add_float_entry(info_page, 'Zoom')
 
-        self.u_40 = self.add_num_entry(interpolation_page, 'X Position Duration')
-        self.u_42 = self.add_num_entry(interpolation_page, 'Y Position Duration')
-        self.u_36 = self.add_num_entry(interpolation_page, 'Z Position Duration')
+        self.x_position_duration = self.add_num_entry(interpolation_page, 'X Position Duration')
+        self.y_position_duration = self.add_num_entry(interpolation_page, 'Y Position Duration')
+        self.z_position_duration = self.add_num_entry(interpolation_page, 'Z Position Duration')
 
 
-        self.u_3c = self.add_num_entry(interpolation_page, 'X Rotation Duration')
-        self.u_3e = self.add_num_entry(interpolation_page, 'Y Rotation Duration')
-        self.u_48 = self.add_num_entry(interpolation_page, 'Z Rotation Duration')
+        self.x_rotation_duration = self.add_num_entry(interpolation_page, 'X Rotation Duration')
+        self.y_rotation_duration = self.add_num_entry(interpolation_page, 'Y Rotation Duration')
+        self.z_rotation_duration = self.add_num_entry(interpolation_page, 'Z Rotation Duration')
 
         self.zoom_duration = self.add_num_entry(interpolation_page, 'Zoom Duration')
-        self.u_38 = self.add_num_entry(interpolation_page, 'Displacement X/Z Duration')
-        self.u_3a = self.add_num_entry(interpolation_page, 'Displacement Y/Z Duration')
-        self.u_12 = self.add_num_entry(interpolation_page, 'Duration ALL')
+        self.displacement_xz_duration = self.add_num_entry(interpolation_page, 'Displacement X/Z Duration')
+        self.displacement_yz_duration = self.add_num_entry(interpolation_page, 'Displacement Y/Z Duration')
+        self.duration_all = self.add_num_entry(interpolation_page, 'Duration ALL')
         self.camera_flags = self.add_multiple_selection_entry(self.entry_page, 'Camera Flags', choices=[
             ('ECC Options', None, True),
             ('View', [

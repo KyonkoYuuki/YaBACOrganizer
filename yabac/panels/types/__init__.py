@@ -30,7 +30,7 @@ BONE_TYPES = {
     'b_R_Foot': 0xd,
     'b_L_Foot': 0xe,
     'b_R_Leg1': 0x0f,
-    'b_L_Leg 1': 0x10,
+    'b_L_Leg1': 0x10,
     'g_C_Head': 0x11,
     'g_C_Pelvis': 0x12,
     'g_L_Foot': 0x13,
@@ -215,13 +215,13 @@ class BasePanel(wx.Panel):
         elif self.entry.bac_record.__name__ == "BACSound":
             acb_type_tmp = self.entry.acb_type
         elif self.entry.bac_record.__name__ == "BACProjectile":
-            skill_type_tmp = self.entry.skill_type
+            skill_bsa_flags_tmp = self.entry.skill_bsa_flags
         elif self.entry.bac_record.__name__ == "BACSystem":
             function_type_tmp = self.entry.function_type
         elif self.entry.bac_record.__name__ == "BACTargetingAssistance":
             rotation_axis_tmp = self.entry.rotation_axis
         elif self.entry.bac_record.__name__ == "BACEyeMovement":
-            direction_type_tmp = self.entry.direction_type
+            next_direction_tmp = self.entry.next_direction
         elif self.entry.bac_record.__name__ == "BACAuraEffect":
             aura_type_tmp = self.entry.aura_type
         elif self.entry.bac_record.__name__ == "BACPhysics":
@@ -263,13 +263,13 @@ class BasePanel(wx.Panel):
         elif self.entry.bac_record.__name__ == "BACSound":
             do_update_maintype = True if self.entry.acb_type != acb_type_tmp else False
         elif self.entry.bac_record.__name__ == "BACProjectile":
-            do_update_maintype = True if self.entry.skill_type != skill_type_tmp else False
+            do_update_maintype = True if self.entry.skill_bsa_flags != skill_bsa_flags_tmp else False
         elif self.entry.bac_record.__name__ == "BACSystem":
             do_update_maintype = True if self.entry.function_type != function_type_tmp else False
         elif self.entry.bac_record.__name__ == "BACTargetingAssistance":
             do_update_maintype = True if self.entry.rotation_axis != rotation_axis_tmp else False
         elif self.entry.bac_record.__name__ == "BACEyeMovement":
-            do_update_maintype = True if self.entry.direction_type != direction_type_tmp else False
+            do_update_maintype = True if self.entry.next_direction != next_direction_tmp else False
         elif self.entry.bac_record.__name__ == "BACAuraEffect":
             do_update_maintype = True if self.entry.aura_type != aura_type_tmp else False
         elif self.entry.bac_record.__name__ == "BACPhysics":

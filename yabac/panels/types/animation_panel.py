@@ -26,7 +26,7 @@ class AnimationPanel(BasePanel):
             'Skill Ean': 0xfffe
         })
 
-        self.u_0c = self.add_multiple_selection_entry(self.entry_page, 'Animation Flags',  choices=[
+        self.animation_flags = self.add_multiple_selection_entry(self.entry_page, 'Animation Flags',  choices=[
             ('Animation Options #1', [
                 'Unknown (0x1)',
                 'Specific per EAN Type',
@@ -53,7 +53,7 @@ class AnimationPanel(BasePanel):
             ], True)
         ])
 
-        self.u_0e = self.add_single_selection_entry(flags_page, 'Play Face Animation from Skill / Chara EAN', choices={
+        self.play_face_animation_from_skill = self.add_single_selection_entry(flags_page, 'Play Face Animation from Skill / Chara EAN', choices={
             'No': 0x0,
             'Yes': 0x1
         })
@@ -65,9 +65,9 @@ class AnimationPanel(BasePanel):
         self.frame_loop_start = self.add_num_entry(self.entry_page, 'Frame Loop Start')
         self.u_16 = self.add_hex_entry(self.unknown_page, 'U_16', max=0xFFFF)
         self.speed = self.add_float_entry(speed_page, 'Speed')
-        self.transitory_animation_connection_type = self.add_float_entry(
+        self.animation_transition_start_frame = self.add_float_entry(
             speed_page, 'Animation Transition\nStart Frame')
-        self.transitory_animation_compression = self.add_float_entry(
+        self.animation_transition_frame_step = self.add_float_entry(
             speed_page, 'Animation Transition\nFrame Step')
 
 

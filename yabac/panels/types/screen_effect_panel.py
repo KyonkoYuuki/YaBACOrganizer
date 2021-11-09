@@ -1,4 +1,5 @@
-from yabac.panels.types import BasePanel
+from yabac.panels.types import BasePanel, BONE_TYPES
+
 
 IDs={
             0: 'Brightens up the screen',
@@ -17,20 +18,20 @@ IDs={
             16: 'Quick Motion Blur',
             17: 'Magenta Filter',
             18: 'Two Different Motion Blurs',
-            20: 'Ripple Blur on Right Fist',
-            21: 'Ripple Blur on Right Fist',
-            22: 'Ripple Blur on Right Fist',
-            23: 'Ripple Blur over Character’s Head',
-            24: 'Gravely Blur on Right Fist',
-            25: 'Gravely Blur on Right Fist',
-            26: 'Ripple Blur over Character',
-            27: 'Ripple Blur over Character',
+            20: 'Ripple Blur',
+            21: 'Ripple Blur',
+            22: 'Ripple Blur',
+            23: 'Ripple Blur',
+            24: 'Gravely Blur',
+            25: 'Gravely Blur',
+            26: 'Ripple Blur ',
+            27: 'Ripple Blur',
             30: 'Solar Flare Screen Effect (Opponent Blind)',
             31: 'blackening around the screen',
             32: 'blackening around the screen',
-            33: 'Faint Black Circle around the character',
+            33: 'Faint Black Circle',
             34: 'A pair of faint Black Circles',
-            35: 'aint Black Circle',
+            35: 'faint Black Circle',
             36: 'Solar Flare Screen Effect (User Activate)',
             37: 'Screen turns completely black',
             40: 'Small Transparent Ring expanding',
@@ -53,7 +54,7 @@ IDs={
             63: 'Screen slightly darkens and desaturates',
             64: 'Screen flashes a faint pink for a second',
             65: 'Light Blue Filter Fades in and out',
-            66: 'Black Spheres the character',
+            66: 'Black Spheres',
             70: 'Standard Black Filter used during Skill Activations'
         }
 
@@ -62,39 +63,30 @@ class ScreenEffectPanel(BasePanel):
 
         BasePanel.__init__(self, *args)
         self.bpe_effect_id = self.add_unknown_num_entry(self.entry_page, 'BPE Effect Id', knownValues=IDs)
-        self.u_0c = self.add_multiple_selection_entry(self.entry_page, 'ScreenEffect Flags', choices=[
+        self.bone_link = self.add_single_selection_entry(self.entry_page, 'Bone Link', majorDimension=5, choices=BONE_TYPES)
+        self.screeneffect_flags = self.add_multiple_selection_entry(self.entry_page, 'ScreenEffect Flags', majorDimension=2, choices=[
             ('ScreenEffect Options #1', [
-                'Flag effect to not expire',
-                'Force expire effect',
-                "Unknown (0x4)",
-                'Unknown (0x8)'
+                None,
+                None,
+                None,
+                None
             ], True),
             ('ScreenEffect Options #2', [
-                'Unknown (0x1)',
-                'Unknown (0x2)',
-                "Unknown (0x4)",
-                'Unknown (0x8)'
+                None,
+                None,
+                None,
+                None
             ], True),
-            ('ScreenEffect Options #3', [
-                'Unknown (0x1)',
-                'Unknown (0x2)',
-                "Unknown (0x4)",
-                'Unknown (0x8)'
-            ], True),
-            ('ScreenEffect Options #4', [
-                'Unknown (0x1)',
-                'Unknown (0x2)',
-                "Unknown (0x4)",
-                'Unknown (0x8)'
-            ], True),
-            ('ScreenEffect Options #5', [
-                'Unknown (0x1)',
-                'Unknown (0x2)',
-                "Unknown (0x4)",
-                'Unknown (0x8)'
-            ], True)
+            ('Activation Options', {
+                'On' : 0x0,
+                'Unknown (0x1)' : 0x1,
+                "Off? (0x2)" : 0x2,
+                'Off? (0x3)' : 0x3
+            }, False)
         ])
+
+
         self.u_10 = self.add_hex_entry(self.unknown_page, 'U_10')
-        self.u_14 = self.add_hex_entry(self.unknown_page, 'U_14')
-        self.u_18 = self.add_hex_entry(self.unknown_page, 'U_18')
+        self.u_14 = self.add_float_entry(self.unknown_page, 'f_14')
+        self.u_18 = self.add_float_entry(self.unknown_page, 'f_18')
         self.u_1c = self.add_hex_entry(self.unknown_page, 'U_1C')

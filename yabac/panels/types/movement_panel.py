@@ -9,11 +9,11 @@ class MovementPanel(BasePanel):
         self.notebook.InsertPage(1, matrix_page, 'Matrix')
 
         self.movement_flags = self.add_multiple_selection_entry(
-            self.entry_page, 'Movement Flags', orient=wx.VERTICAL, cols=4, choices=[
-                ('', [None, None, None, 'Orientation Follows Direction'], True),
-                ('', ['Allow Teleport', None, 'Up', 'Down'], True),
+            self.entry_page, 'Movement Flags', orient=wx.VERTICAL, cols=2, choices=[
+                ('', [None, 'Teleport to random opponents(?)', None, 'Orientation Follows Direction'], True),
+                ('', ["Teleport Z Direction Reletive to Opponent's", None, 'Up', 'Down'], True),
                 ('', [None, None, None, 'No Orientation'], True),
-                ('', ['Automatic in direction', 'Automatic towards opponent', 'Manual', 'Teleport to opponent'], True)
+                ('', ['Automatic in direction', 'Automatic towards opponent', 'Manual', 'Teleport'], True)
             ])
         self.u_0a = self.add_hex_entry(self.unknown_page, 'U_0A')
         self.x_axis_movement = self.add_float_entry(matrix_page, 'X Axis Movement')

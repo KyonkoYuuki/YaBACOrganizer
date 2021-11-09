@@ -302,7 +302,7 @@ class MainPanel(wx.Panel):
                                            item.acb_type_dict.get(item.acb_type, 'Unknown'), data=item)
             elif sub_entry.get_type_name() == "Projectile":
                 self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.skill_type_dict.get(item.skill_type, 'Unknown'), data=item)
+                                           item.skill_type_dict.get(item.skill_bsa_flags, 'Unknown'), data=item)
             elif sub_entry.get_type_name() == "System":
                 self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
                                            item.function_type_dict.get(item.function_type, 'Unknown'), data=item)
@@ -311,7 +311,7 @@ class MainPanel(wx.Panel):
                                            item.rotation_axis_dict.get(item.rotation_axis, 'Unknown'), data=item)
             elif sub_entry.get_type_name() == "EyeMovement":
                 self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.direction_type_dict.get(item.direction_type, 'Unknown'), data=item)
+                                           item.direction_type_dict.get(item.next_direction, 'Unknown'), data=item)
             elif sub_entry.get_type_name() == "HomingMovement":
                 self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
                                            item.homingmovement_type_dict.get(item.homingmovement_type, 'Unknown'), data=item)
@@ -381,7 +381,7 @@ class MainPanel(wx.Panel):
                                                         entry.acb_type_dict.get(entry.acb_type, 'Unknown'))
                         elif sub_entry.get_type_name() == "Projectile":
                             self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.skill_type_dict.get(entry.skill_type, 'Unknown'))
+                                                        entry.skill_type_dict.get(entry.skill_bsa_flags, 'Unknown'))
                         elif sub_entry.get_type_name() == "System":
                             self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
                                                         entry.function_type_dict.get(entry.function_type, 'Unknown'))
@@ -390,7 +390,7 @@ class MainPanel(wx.Panel):
                                                         entry.rotation_axis_dict.get(entry.rotation_axis, 'Unknown'))
                         elif sub_entry.get_type_name() == "EyeMovement":
                             self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.direction_type_dict.get(entry.direction_type, 'Unknown'))
+                                                        entry.direction_type_dict.get(entry.next_direction, 'Unknown'))
                         elif sub_entry.get_type_name() == "HomingMovement":
                             self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
                                                         entry.homingmovement_type_dict.get(entry.homingmovement_type, 'Unknown'))

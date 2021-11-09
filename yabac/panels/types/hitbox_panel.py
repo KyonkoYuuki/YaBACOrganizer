@@ -1,3 +1,4 @@
+import wx
 from yabac.panels.types import Page, BasePanel
 
 
@@ -11,7 +12,7 @@ class HitboxPanel(BasePanel):
         self.notebook.InsertPage(1, damage_page, 'BDM/Damage')
         self.notebook.InsertPage(2, matrix_page, 'Matrix')
         self.bdm_entry = self.add_num_entry(damage_page, 'BDM Entry')
-        self.hitbox_flags = self.add_multiple_selection_entry(self.entry_page, 'Hitbox Flags',  majorDimension=2,  choices=[
+        self.hitbox_flags = self.add_multiple_selection_entry(self.entry_page, 'Hitbox Flags', orient=wx.VERTICAL, cols=2, majorDimension=2,  choices=[
             ('Impact Type', {
                 'Continuous / None': 0x0,
                 'Unknown (0x1)': 0x1,
@@ -35,7 +36,7 @@ class HitboxPanel(BasePanel):
             ('Unknown', None, True)
         ])
 
-        self.u_14 = self.add_multiple_selection_entry(self.entry_page, 'Hitbox Properties', choices=[
+        self.hitbox_properties_1 = self.add_multiple_selection_entry(self.entry_page, 'Hitbox Properties 1', majorDimension=2, choices=[
             ('Hitbox Options #1', [
                 'Unknown (0x1)',
                 'Unknown (0x2)',
@@ -45,7 +46,7 @@ class HitboxPanel(BasePanel):
             ('Hitbox Options #2', [
                 'Unknown (0x1)',
                 'Unknown (0x2)',
-                "Treat Hitbox as a Sphere",
+                "Unknown (0x4)",
                 'Unknown (0x8)'
             ], True),
             ('Hitbox Options #3', [
@@ -59,19 +60,24 @@ class HitboxPanel(BasePanel):
                 'Unknown (0x2)',
                 "Unknown (0x4)",
                 'Unknown (0x8)'
-            ], True),
-            ('Hitbox Options #5', [
-                'Unknown (0x1)',
-                'Unknown (0x2)',
-                "Unknown (0x4)",
-                'Unknown (0x8)'
-            ], True),
-            ('Hitbox Options #6', [
-                'Unknown (0x1)',
-                'Unknown (0x2)',
-                "Unknown (0x4)",
-                'Unknown (0x8)'
             ], True)
+        ])
+
+        self.hitbox_properties_2 = self.add_multiple_selection_entry(self.entry_page, 'Hitbox Properties 2', majorDimension=2, choices=[
+
+            ('Hitbox Options #2', [
+                'Unknown (0x1)',
+                'Unknown (0x2)',
+                "Unknown (0x4)",
+                'Unknown (0x8)'
+            ], True),
+            ('Hitbox Options #1', {
+                'None': 0x0,
+                'Unknown (0x1)': 0x1,
+                'Unknown (0x2)': 0x2,
+                "Treat Hitbox as a Sphere": 0x4,
+                'Unknown (0x7)': 0x7
+            }, False),
         ])
 
 
@@ -79,7 +85,7 @@ class HitboxPanel(BasePanel):
         self.damage_when_blocked = self.add_num_entry(damage_page, 'Damage When Blocked')
         self.stamina_taken_when_blocked = self.add_num_entry(
             damage_page, 'Stamina Taken When Blocked', True)
-        self.use_matrix = self.add_multiple_selection_entry(matrix_page, 'Matrix Flags', choices=[
+        self.matrix_flags = self.add_multiple_selection_entry(matrix_page, 'Matrix Flags', choices=[
             ('Matrix Options #1', [
                 'Unknown (0x1)',
                 'Unknown (0x2)',
