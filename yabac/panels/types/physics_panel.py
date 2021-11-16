@@ -6,8 +6,9 @@ class PhysicsPanel(BasePanel):
 
         BasePanel.__init__(self, *args)
         self.function_type = self.add_unknown_hex_entry(self.entry_page, 'Function Type', showKnown=True, knownValues={
-            0x0: 'Simulate Physics',
-            0x1: 'Play SCD Animations',
+            0x0: 'Unknown',
+            0x1: 'Simulate Physics',
+            0x2: 'Play SCD Animations',
         })
         self.ean_index = self.add_num_entry(self.entry_page, 'EAN Index')
         self.u_10 = self.add_hex_entry(self.unknown_page, 'U_10')
