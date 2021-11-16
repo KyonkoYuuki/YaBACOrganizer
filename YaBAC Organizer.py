@@ -17,7 +17,7 @@ from yabac.dlg.replace import ReplaceDialog
 
 
 
-VERSION = '0.3.9 - Unleashed Edits 2.1'
+VERSION = '0.4.0'
 
 
 
