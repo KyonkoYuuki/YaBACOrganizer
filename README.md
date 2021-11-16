@@ -47,5 +47,6 @@ Fixed bug with Smart Paste not showing enough changes sometimes.
 0.3.7 - Fixed BACType27 entries, swapped back x and y rotation for Camera
 0.3.8 - Fixed issues with copying entries
 0.3.9 - Fixed find/replace dialogs so it works with int/hex/float
+0.4.0 - Merged Unleashed Edits 2.1 with main repo
 ```
 
