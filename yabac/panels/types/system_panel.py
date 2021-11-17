@@ -1,6 +1,6 @@
 from yabac.panels.types import BasePanel
 
-mapping_names = ['f_0c', 'f_10', 'f_14' ,'f_18' ,'f_1c']
+mapping_names = ['f_0c', 'f_10', 'f_14', 'f_18', 'f_1c']
 mappings = {
     0x2: ('Damage', None, None, None, None),
     0x4: ('Ki', None, None, None, None),
@@ -88,8 +88,8 @@ class SystemPanel(BasePanel):
         self.f_18_label, self.f_18 = self.add_nameable_float_entry(self.entry_page, name='F_18')
         self.f_1c_label, self.f_1c = self.add_nameable_float_entry(self.entry_page, name='F_1C')
 
-        #self.u_18 = self.add_float_entry(self.unknown_page, 'F_18')
-        #self.u_1c = self.add_float_entry(self.unknown_page, 'F_1C')
+        # self.u_18 = self.add_float_entry(self.unknown_page, 'F_18')
+        # self.u_1c = self.add_float_entry(self.unknown_page, 'F_1C')
 
     def load_entry(self, e, entry):
         super().load_entry(e, entry)

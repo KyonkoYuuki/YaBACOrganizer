@@ -58,7 +58,6 @@ class AnimationPanel(BasePanel):
             'Yes': 0x1
         })
 
-
         self.ean_index = self.add_num_entry(self.entry_page, 'EAN Index')
         self.frame_start = self.add_num_entry(self.entry_page, 'Frame Start')
         self.frame_end = self.add_num_entry(self.entry_page, 'Frame End')

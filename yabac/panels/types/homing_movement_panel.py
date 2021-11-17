@@ -12,8 +12,8 @@ class HomingMovementPanel(BasePanel):
         props_page = Page(self.notebook)
         self.notebook.InsertPage(1, props_page, 'Properties')
 
-        #UNLEASHED: the showKnown buttons don't work, the value set does not save
-        self.homingmovement_type = self.add_unknown_hex_entry(self.entry_page, 'Type', showKnown=False, knownValues={
+        # UNLEASHED: the showKnown buttons don't work, the value set does not save
+        self.homing_movement_type = self.add_unknown_hex_entry(self.entry_page, 'Type', showKnown=False, knownValues={
             0x0: 'Horizontal arc',
             0x1: 'Straight line',
             0x2: 'Right-left/up-down arc'
@@ -26,8 +26,7 @@ class HomingMovementPanel(BasePanel):
                 0x23: 'Allow float (Speed Modifier)'
             })
         self.u_20 = self.add_num_entry(props_page, 'I_20')
-        self.u_24  = self.add_num_entry(props_page, 'I_24')
-
+        self.u_24 = self.add_num_entry(props_page, 'I_24')
 
         self.speed_modifier = self.add_float_entry(self.entry_page, 'Speed Modifier / Frame Duration')
         self.frame_threshold = self.add_num_entry(self.entry_page, 'Frame Threshold')
@@ -45,7 +44,7 @@ class HomingMovementPanel(BasePanel):
             return
 
         start_time = self.entry.start_time
-        homingmovement_type_tmp = self.entry.homingmovement_type
+        homing_movement_type_tmp = self.entry.homing_movement_type
 
         horizontal_homing_arc_direction = self.horizontal_homing_arc_direction.GetValue()
         for name in self.entry.__fields__:
@@ -69,8 +68,5 @@ class HomingMovementPanel(BasePanel):
             pub.sendMessage('update_item', item=self.item, entry=self.entry)
             pub.sendMessage('reindex')
 
-        if self.entry.homingmovement_type != homingmovement_type_tmp:
+        if self.entry.homing_movement_type != homing_movement_type_tmp:
             pub.sendMessage('reindex')
-
-
-

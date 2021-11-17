@@ -2,19 +2,19 @@ from yabac.panels.types import BasePanel
 
 from pyxenoverse.gui.ctrl.dummy_ctrl import DummyCtrl
 
+
 class TransparencyEffectPanel(BasePanel):
     def __init__(self, *args):
-
         BasePanel.__init__(self, *args)
         self.transparency_flags = self.add_hex_entry(self.entry_page, 'Transparency Flags')
         self.transparency_flags2 = self.add_hex_entry(self.entry_page, 'Transparency Flags 2')
         self.dilution = self.add_num_entry(self.entry_page, 'Dilution')
         self.u_0e = self.add_hex_entry(self.unknown_page, 'U_0E', max=0xFFFF)
         self.u_10 = self.add_hex_entry(self.unknown_page, 'U_10')
-        #DummyCtrl()
-        #self.red =  self.add_num_entry(self.entry_page, 'r')
-        #self.green =self.add_num_entry(self.entry_page, 'g')
-        #self.blue = self.add_num_entry(self.entry_page, 'b')
+        # DummyCtrl()
+        # self.red =  self.add_num_entry(self.entry_page, 'r')
+        # self.green =self.add_num_entry(self.entry_page, 'g')
+        # self.blue = self.add_num_entry(self.entry_page, 'b')
         self.red = DummyCtrl()
         self.green = DummyCtrl()
         self.blue = DummyCtrl()

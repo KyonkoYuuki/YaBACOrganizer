@@ -1,7 +1,6 @@
 import wx
 
 
-
 class OffsetDialog(wx.Dialog):
     def __init__(self, parent, Title, *args, **kw):
         super().__init__(parent, *args, **kw)
@@ -11,17 +10,12 @@ class OffsetDialog(wx.Dialog):
         # self.find_ctrl.Bind(wx.EVT_TEXT_ENTER, self.on_find)
         self.offset_ctrl.SetFocus()
 
-
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(wx.StaticText(self, -1, 'Offset time:'), 0, wx.ALL, 10)
 
         self.grid_sizer = wx.FlexGridSizer(rows=4, cols=2, hgap=10, vgap=10)
         self.grid_sizer.Add(self.offset_ctrl, 0, wx.EXPAND)
         hsizer.Add(self.grid_sizer, 0, wx.ALL, 10)
-
-
-
-
 
         button_sizer = wx.BoxSizer(wx.HORIZONTAL)
         ok_button = wx.Button(self, wx.ID_OK, "Ok")

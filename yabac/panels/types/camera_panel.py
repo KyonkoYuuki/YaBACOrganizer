@@ -3,7 +3,6 @@ from yabac.panels.types import BasePanel, Page, BONE_TYPES
 
 class CameraPanel(BasePanel):
     def __init__(self, *args):
-
         BasePanel.__init__(self, *args)
         ean_page = Page(self.notebook)
         info_page = Page(self.notebook)
@@ -57,7 +56,6 @@ class CameraPanel(BasePanel):
         self.y_position_duration = self.add_num_entry(interpolation_page, 'Y Position Duration')
         self.z_position_duration = self.add_num_entry(interpolation_page, 'Z Position Duration')
 
-
         self.x_rotation_duration = self.add_num_entry(interpolation_page, 'X Rotation Duration')
         self.y_rotation_duration = self.add_num_entry(interpolation_page, 'Y Rotation Duration')
         self.z_rotation_duration = self.add_num_entry(interpolation_page, 'Z Rotation Duration')
@@ -87,4 +85,3 @@ class CameraPanel(BasePanel):
                 'Force character cam.ean'
             ], True)
         ])
-

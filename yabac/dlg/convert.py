@@ -33,4 +33,3 @@ class ConvertDialog(wx.Dialog):
 
     def GetValue(self):
         return int(self.skill_id.GetString(self.skill_id.GetSelection()))
-

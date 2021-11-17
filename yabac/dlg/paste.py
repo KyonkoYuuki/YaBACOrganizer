@@ -30,8 +30,12 @@ class PasteDialog(wx.Dialog):
                 dependency = entry_pair[1]
                 for depend_value, entry_values in v2.items():
                     if dependency:
-                        sizer.Add(wx.StaticText(self, -1, f'{unsnake_case(dependency)} '
-                                                f'({item_type.dependencies[entry_pair][depend_value]}): '), 0, wx.ALL, 5)
+                        sizer.Add(wx.StaticText(
+                            self, -1,
+                            f'{unsnake_case(dependency)} '
+                            f'({item_type.dependencies[entry_pair][depend_value]}): '), 0,
+                            wx.ALL, 5
+                        )
                     grid_sizer = wx.FlexGridSizer(rows=len(entry_values), cols=3, hgap=10, vgap=10)
                     sizer.Add(grid_sizer, 0, wx.ALL, 10)
                     choices = ['No Change']

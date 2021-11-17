@@ -4,7 +4,6 @@ import sys
 from pubsub import pub
 import wx
 
-
 from pyxenoverse.bac.sub_entry import ITEM_TYPES
 
 from yabac.panels.types.entry_panel import EntryPanel
@@ -90,5 +89,3 @@ class SidePanel(wx.Panel):
             self.show_panel(self.panels[name], item, entry)
         else:
             self.hide_panels()
-
-

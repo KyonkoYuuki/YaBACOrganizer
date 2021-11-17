@@ -26,7 +26,8 @@ class MainPanel(wx.Panel):
         self.cdo = None
         self.refresh = True
 
-        self.entry_list = wx.TreeCtrl(self, style=wx.TR_MULTIPLE | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT | wx.TR_LINES_AT_ROOT | wx.TR_HIDE_ROOT)
+        self.entry_list = wx.TreeCtrl(self,
+                                      style=wx.TR_MULTIPLE | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT | wx.TR_LINES_AT_ROOT | wx.TR_HIDE_ROOT)
         self.entry_list.SetDropTarget(FileDropTarget(self, "load_bac"))
         self.entry_list.Bind(wx.EVT_TREE_ITEM_MENU, self.on_right_click)
         self.entry_list.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_select)
@@ -109,9 +110,9 @@ class MainPanel(wx.Panel):
         self.enable_selected(copy)
         offset = menu.Append(self.offset_id, "Offset Start Time\tCtrl+B", "&offset entry(s) start time")
         self.enable_selected(offset, single=False)
-        offset_incremental = menu.Append(self.inc_offset_id, "Incrementaly Offset Start Time\tCtrl+N", "&incrementaly offset entry(s) start time")
+        offset_incremental = menu.Append(self.inc_offset_id, "Incrementaly Offset Start Time\tCtrl+N",
+                                         "&incrementaly offset entry(s) start time")
         self.enable_selected(offset_incremental, single=False)
-
 
         for sel in self.entry_list.GetSelections():
             entry = self.entry_list.GetItemData(sel)
@@ -283,51 +284,9 @@ class MainPanel(wx.Panel):
 
     def build_sub_entry_tree(self, sub_entry_item, sub_entry):
         for item in sub_entry.items:
-
-            # UNLEASHED: check if subentry type is animation, if it is then show the name in the list for easier navigation
-            if sub_entry.get_type_name() == "Animation":
+            if item.description and item.description_type:
                 self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.ean_type_dict.get(item.ean_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "Hitbox":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.bdm_type_dict.get(item.bdm_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "Effect":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.eepk_type_dict.get(item.eepk_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "Camera":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.ean_type_dict.get(item.ean_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "Sound":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.acb_type_dict.get(item.acb_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "Projectile":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.skill_type_dict.get(item.skill_bsa_flags, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "System":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.function_type_dict.get(item.function_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "TargetingAssistance":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.rotation_axis_dict.get(item.rotation_axis, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "EyeMovement":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.direction_type_dict.get(item.next_direction, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "HomingMovement":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.homingmovement_type_dict.get(item.homingmovement_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "AuraEffect":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.aura_type_dict.get(item.aura_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "Physics":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.function_type_dict.get(item.function_type, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "PartInvisibility":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.bcs_part_id_dict.get(item.bcs_part_id, 'Unknown'), data=item)
-            elif sub_entry.get_type_name() == "ScreenEffect":
-                self.entry_list.AppendItem(sub_entry_item, str(item.start_time) + " - " +
-                                           item.bpe_effect_id_dict.get(item.bpe_effect_id, 'Unknown'), data=item)
-
+                                           item.description.get(item.__getattr__(item.description_type), 'Unknown'), data=item)
             else:
                 self.entry_list.AppendItem(sub_entry_item, str(item.start_time), data=item)
 
@@ -363,49 +322,10 @@ class MainPanel(wx.Panel):
                     for entry in sub_entry.items:
                         item = get_next_item(self.entry_list, item)
                         self.entry_list.SetItemData(item, entry)
-                        #UNLEASHED: do the same as the build_sub_tree function
-                        if sub_entry.get_type_name() == "Animation":
+                        # UNLEASHED: do the same as the build_sub_tree function
+                        if entry.description and entry.description_type:
                             self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.ean_type_dict.get(entry.ean_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "Hitbox":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.bdm_type_dict.get(entry.bdm_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "Effect":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.eepk_type_dict.get(entry.eepk_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "Camera":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.ean_type_dict.get(entry.ean_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "Sound":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.acb_type_dict.get(entry.acb_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "Projectile":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.skill_type_dict.get(entry.skill_bsa_flags, 'Unknown'))
-                        elif sub_entry.get_type_name() == "System":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.function_type_dict.get(entry.function_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "TargetingAssistance":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.rotation_axis_dict.get(entry.rotation_axis, 'Unknown'))
-                        elif sub_entry.get_type_name() == "EyeMovement":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.direction_type_dict.get(entry.next_direction, 'Unknown'))
-                        elif sub_entry.get_type_name() == "HomingMovement":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.homingmovement_type_dict.get(entry.homingmovement_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "AuraEffect":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.aura_type_dict.get(entry.aura_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "Physics":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.function_type_dict.get(entry.function_type, 'Unknown'))
-                        elif sub_entry.get_type_name() == "PartInvisibility":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.bcs_part_id_dict.get(entry.bcs_part_id, 'Unknown'))
-                        elif sub_entry.get_type_name() == "ScreenEffect":
-                            self.entry_list.SetItemText(item, str(entry.start_time) + " - " +
-                                                        entry.bpe_effect_id_dict.get(entry.bpe_effect_id, 'Unknown'))
+                                                        entry.description.get(entry.__getattr__(entry.description_type), 'Unknown'))
                         else:
                             self.entry_list.SetItemText(item, str(entry.start_time))
             item = get_next_item(self.entry_list, item)
@@ -512,7 +432,7 @@ class MainPanel(wx.Panel):
         # Add it to sub_entry
         sub_entry_data.items.append(new_bac_type)
         sub_entry_data.items.sort(key=lambda n: n.start_time)
-        #UNLEASHED: not entry should have duration as 0, so lets just set to 1 inititally
+        # UNLEASHED: not entry should have duration as 0, so lets just set to 1 inititally
         new_bac_type.duration = 1
 
         # Add to correct place in tree list
@@ -599,19 +519,17 @@ class MainPanel(wx.Panel):
 
         for sel in selected:
             entry = self.entry_list.GetItemData(sel)
-            if entry.start_time + offset_val < 0: # offset by a negetive value
-                temp_offset_val = offset_val + entry.start_time #subtrack offset amount by the available start time
-                entry.start_time = 0 #start time should be zero now, and temp_offset_val is the remining value
-                entry.duration += temp_offset_val # subtrack duration from the reminng value (do the same for duration?)
+            if entry.start_time + offset_val < 0:  # offset by a negetive value
+                temp_offset_val = offset_val + entry.start_time  # subtrack offset amount by the available start time
+                entry.start_time = 0  # start time should be zero now, and temp_offset_val is the remining value
+                entry.duration += temp_offset_val  # subtrack duration from the reminng value (do the same for duration?)
             else:
                 entry.start_time += offset_val
 
-
-        #update later to avoid offsetting twice
+        # update later to avoid offsetting twice
         for sel in selected:
             self.update_item(sel, entry)
             self.reindex()
-
 
         pub.sendMessage('set_status_bar', text=f'Offset {len(selected)} Entries')
 
@@ -624,26 +542,21 @@ class MainPanel(wx.Panel):
             offset_val = dlg.GetValue()
             inc = offset_val
 
-
         for sel in selected:
             entry = self.entry_list.GetItemData(sel)
-            if entry.start_time + offset_val < 0: # offset by a negetive value
-                temp_offset_val = offset_val + entry.start_time #subtrack offset amount by the available start time
-                entry.start_time = 0 #start time should be zero now, and temp_offset_val is the remining value
-                entry.duration += temp_offset_val # subtrack duration from the reminng value (do the same for duration?)
+            if entry.start_time + offset_val < 0:  # offset by a negetive value
+                temp_offset_val = offset_val + entry.start_time  # subtrack offset amount by the available start time
+                entry.start_time = 0  # start time should be zero now, and temp_offset_val is the remining value
+                entry.duration += temp_offset_val  # subtrack duration from the reminng value (do the same for duration?)
             else:
                 entry.start_time += offset_val
 
             offset_val += inc
 
-
-
-        #update later to avoid offsetting twice
+        # update later to avoid offsetting twice
         for sel in selected:
             self.update_item(sel, entry)
             self.reindex()
-
-
 
         pub.sendMessage('set_status_bar', text=f'incrementally Offset {len(selected)} Entries')
 
@@ -687,7 +600,7 @@ class MainPanel(wx.Panel):
 
         if type(paste_data) != type(entry):
             with wx.MessageDialog(self, f"Unable to paste '{paste_data.get_readable_name()}' type "
-                                  f"onto '{entry.get_readable_name()}'") as dlg:
+                                        f"onto '{entry.get_readable_name()}'") as dlg:
                 dlg.ShowModal()
             return
 
@@ -741,11 +654,9 @@ class MainPanel(wx.Panel):
         entry = self.entry_list.GetItemData(item)
         if type(paste_data) != type(entry):
             with wx.MessageDialog(self, f"Unable to add '{paste_data.get_readable_name()}' type "
-                                  f"onto '{entry.get_readable_name()}'") as dlg:
+                                        f"onto '{entry.get_readable_name()}'") as dlg:
                 dlg.ShowModal()
             return
-
-        
 
         class_name = paste_data.get_name()
         if class_name == 'Entry':
