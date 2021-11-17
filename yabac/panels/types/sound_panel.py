@@ -1,35 +1,12 @@
 from yabac.panels.types import BasePanel
+from pyxenoverse.bac.types.sound import Sound
 
 
 class SoundPanel(BasePanel):
     def __init__(self, *args):
         BasePanel.__init__(self, *args)
-        self.acb_type = self.add_single_selection_entry(self.entry_page, 'ACB Type', majorDimension=4, choices={
-            'CAR_BTL_CMN': 0x0,
-            'Unknown (0x1)': 0x1,
-            'Character SE': 0x2,
-            'Character VOX': 0x3,
-            'Unknown (0x4)': 0x4,
-            'Unknown (0x5)': 0x5,
-            'Unknown (0x6)': 0x6,
-            'Unknown (0x7)': 0x7,
-            'Unknown (0x8)': 0x8,
-            'Skill SE': 0xa,
-            'Skill VOX': 0xb,
-            'Unknown (0x16)': 0x16,
-            'Unknown (0x17)': 0x17,
-            'Unknown (0x1a)': 0x1a,
-            'Unknown (0x1c)': 0x1c,
-            'Unknown (0x1d)': 0x1d,
-            'Unknown (0x22)': 0x22,
-            'Unknown (0x23)': 0x23,
-            'Unknown (0x34)': 0x34,
-            'Unknown (0x35)': 0x35,
-            'Unknown (0x37)': 0x39,
-            'Unknown (0x39)': 0x39,
-            'Unknown (0x62)': 0x62,
-            'Unknown (0x100)': 0x100,
-        })
+        self.acb_type = self.add_single_selection_entry(self.entry_page, 'ACB Type', majorDimension=4,
+                                                        choices=Sound.description_choices())
 
         self.cue_id = self.add_num_entry(self.entry_page, 'Cue ID')
 

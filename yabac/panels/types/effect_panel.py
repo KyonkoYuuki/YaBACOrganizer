@@ -1,26 +1,15 @@
 from yabac.panels.types import BasePanel, Page, BONE_TYPES
+from pyxenoverse.bac.types.effect import Effect
 
 
 class EffectPanel(BasePanel):
     def __init__(self, *args):
-
         BasePanel.__init__(self, *args)
         eepk_page = Page(self.notebook)
 
         self.notebook.InsertPage(1, eepk_page, 'Spawn/Bone')
-        self.eepk_type = self.add_single_selection_entry(self.entry_page, 'EEPK Type', majorDimension=3, choices={
-            'Global': 0x0,
-            'Stage BG': 0x1,
-            'Player': 0x2,
-            'Awoken': 0x3,
-            'Super': 0x5,
-            'Ultimate': 0x6,
-            'Evasive': 0x7,
-            'Unknown (0x8)': 0x8,
-            'Ki blast': 0x9,
-            'Unknown (0xa)': 0xa,
-            'Stage (0xb)': 0xb,
-        })
+        self.eepk_type = self.add_single_selection_entry(self.entry_page, 'EEPK Type', majorDimension=3,
+                                                         choices=Effect.description_choices())
 
         self.bone_link = self.add_single_selection_entry(eepk_page, 'Bone Link', majorDimension=5, choices=BONE_TYPES)
 

@@ -1,4 +1,5 @@
 from yabac.panels.types import BasePanel, Page, BONE_TYPES
+from pyxenoverse.bac.types.camera import Camera
 
 
 class CameraPanel(BasePanel):
@@ -11,30 +12,8 @@ class CameraPanel(BasePanel):
         self.notebook.InsertPage(2, info_page, 'Offsets')
         self.notebook.InsertPage(3, interpolation_page, 'Interpolation')
 
-        self.ean_type = self.add_single_selection_entry(ean_page, 'EAN Type', majorDimension=3, choices={
-            'Rumble (0x0)': 0x0,
-            'Heavy Rumble (0x1)': 0x1,
-            'Extreme Rumble (0x2)': 0x2,
-            'CMN.cam.ean': 0x3,
-            'Character': 0x4,
-            'Skill': 0x5,
-            'Zoom': 0x6,
-            'Static': 0x7,
-            'Victim': 0x8,
-            'Unknown (0x9)': 0x9,
-            'Zoom/speed lines': 0xa,
-            'Cinematic (0xb)': 0xb,
-            'Cinematic (0xc)': 0xc,
-            'Unknown (0xd)': 0xd,
-            'Heavy Rumble (0xe)': 0xe,
-            'Extreme Rumble (0xf)': 0xf,
-            'Zoom into player (0x11)': 0x11,
-            'Unknown (0x14)': 0x14,
-            'Unknown (0x16)': 0x16,
-            'Activate Extended Camera (0x19)': 0x19,
-            'Unknown (0x1A)': 0x1A,
-            'Deactivate Extended Camera (0x20)': 0x20,
-        })
+        self.ean_type = self.add_single_selection_entry(ean_page, 'EAN Type', majorDimension=3,
+                                                        choices=Camera.description_choices())
 
         self.bone_to_focus_on = self.add_single_selection_entry(
             ean_page, 'Bone to Focus On', majorDimension=5, choices=BONE_TYPES)
