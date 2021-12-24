@@ -1,6 +1,6 @@
 from pubsub import pub
 import wx
-from yabac.panels.types import BasePanel, Page
+from yabac.panels.types import BasePanel, Page, BONE_TYPES
 from pyxenoverse.bac.types.homing_movement import HomingMovement
 
 
@@ -8,24 +8,34 @@ class HomingMovementPanel(BasePanel):
     def __init__(self, *args):
 
         BasePanel.__init__(self, *args)
-        props_page = Page(self.notebook)
-        self.notebook.InsertPage(1, props_page, 'Properties')
+        bone_link_page = Page(self.notebook)
+        self.notebook.InsertPage(1, bone_link_page, 'Bone Link')
 
         # UNLEASHED: the showKnown buttons don't work, the value set does not save
         self.homing_movement_type = self.add_unknown_hex_entry(self.entry_page, 'Type', showKnown=False,
                                                                knownValues=HomingMovement.description)
-        self.horizontal_homing_arc_direction = self.add_unknown_hex_entry(
-            self.entry_page,
-            'Horizontal Homing\nArc Direction',
-            showKnown=False,
-            knownValues={
-                0x0: 'Right->left',
-                0x1: 'Left->right',
-                0x7: 'Allow float (Speed Modifier)',
-                0x23: 'Allow float (Speed Modifier)'
-            })
-        self.u_20 = self.add_num_entry(props_page, 'I_20')
-        self.u_24 = self.add_num_entry(props_page, 'I_24')
+        self.properties = self.add_multiple_selection_entry(self.entry_page, 'Properties', choices=[
+
+            ('Options #2', [
+                'Unknown (0x1)',
+                'Unknown (0x2)',
+                "Unknown (0x4)",
+                'Unknown (0x8)'
+            ], True),
+            ('Conditions', [
+                'Unknown (0x1)',
+                'Enable Float Parameter',
+                "Unknown (0x4)",
+                'Enable Bone Link'
+            ], True),
+        ])
+
+
+
+        self.u_20 = self.add_single_selection_entry(bone_link_page, 'User Bone', majorDimension=5,
+                                                         choices=BONE_TYPES)
+        self.u_24 = self.add_single_selection_entry(bone_link_page, 'Target Bone', majorDimension=5,
+                                                         choices=BONE_TYPES)
 
         self.speed_modifier = self.add_float_entry(self.entry_page, 'Speed Modifier / Frame Duration')
         self.frame_threshold = self.add_num_entry(self.entry_page, 'Frame Threshold')
@@ -33,7 +43,6 @@ class HomingMovementPanel(BasePanel):
         self.vertical_direction_modifier = self.add_float_entry(self.entry_page, 'Vertical Direction\nModifier')
         self.z_direction_modifier = self.add_float_entry(self.entry_page, 'Z Direction\nModifier')
 
-        self.u_26 = self.add_hex_entry(self.unknown_page, 'U_26')
         self.u_28 = self.add_hex_entry(self.unknown_page, 'U_28')
         self.u_2c = self.add_hex_entry(self.unknown_page, 'U_2C')
 
@@ -45,7 +54,7 @@ class HomingMovementPanel(BasePanel):
         start_time = self.entry.start_time
         homing_movement_type_tmp = self.entry.homing_movement_type
 
-        horizontal_homing_arc_direction = self.horizontal_homing_arc_direction.GetValue()
+        properties = self.properties.GetValue()
         for name in self.entry.__fields__:
             control = self[name]
             # SpinCtrlDoubles suck
@@ -55,8 +64,7 @@ class HomingMovementPanel(BasePanel):
                 except ValueError:
                     # Keep old value if its mistyped
                     pass
-                if name == "speed_modifier" and (horizontal_homing_arc_direction != 7
-                                                 and horizontal_homing_arc_direction != 35):
+                if name == "speed_modifier" and properties & 2 == 2:
                     old_value, self.entry[name] = self.entry[name], int(self.entry[name])
                     if old_value != self.entry[name]:
                         control.SetValue(self.entry[name])
