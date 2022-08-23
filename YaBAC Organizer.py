@@ -17,7 +17,7 @@ from yabac.dlg.replace import ReplaceDialog
 
 
 
-VERSION = '0.4.0'
+VERSION = '0.4.1'
 
 
 
