@@ -10,14 +10,14 @@ class ThrowHandlerPanel(BasePanel):
 
         self.throw_flags = self.add_multiple_selection_entry(self.entry_page, 'Throw Flags', majorDimension=2, choices=[
             ('Throw Options #1', [
-                'Unknown (0x1)',
-                'Unknown (0x2)',
+                'Move Victim to User',
+                'Move Victim to User (Direction reletive to Animation)',
                 "Unknown (0x4)",
                 'Unknown (0x8)'
             ], True),
             ('Throw Options #2', [
-                'Move Victim to User',
-                'Move Victim to User (Direction reletive to Animation)',
+                'Unknown (0x1)',
+                'Unknown (0x2)',
                 "Unknown (0x4)",
                 'Unknown (0x8)'
             ], True),

@@ -23,7 +23,7 @@ class HomingMovementPanel(BasePanel):
                 'Unknown (0x8)'
             ], True),
             ('Conditions', [
-                'Unknown (0x1)',
+                'Enable Auto Tracking',
                 'Enable Float Parameter',
                 "Unknown (0x4)",
                 'Enable Bone Link'

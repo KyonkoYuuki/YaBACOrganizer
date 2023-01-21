@@ -52,10 +52,10 @@ class ProjectilePanel(BasePanel):
             majorDimension=3,
             choices=[
                 ('Spawn', {
-                    'Spawn source': 0x0,
-                    'Unknown (0x1)': 0x1,
+                    'Spawn Source': 0x0,
+                    'Target Direction': 0x1,
                     'Unknown (0x2)': 0x2,
-                    'User direction': 0x3
+                    'User Direction': 0x3
                 }, False),
                 (None, None, False),
                 ('Location', {

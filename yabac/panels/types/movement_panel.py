@@ -10,7 +10,7 @@ class MovementPanel(BasePanel):
 
         self.movement_flags = self.add_multiple_selection_entry(
             self.entry_page, 'Movement Flags', orient=wx.VERTICAL, cols=2, choices=[
-                ('', [None, 'Teleport to random opponents(?)', None, 'Orientation Follows Direction'], True),
+                ('', [None, 'Teleport to random opponents(?)', 'Teleport to Center of Stage', 'Orientation Follows Direction'], True),
                 ('', ["Teleport Z Direction Reletive to Opponent's", None, 'Up', 'Down'], True),
                 ('', [None, None, None, 'No Orientation'], True),
                 ('', ['Automatic in direction', 'Automatic towards opponent', 'Manual', 'Teleport'], True)

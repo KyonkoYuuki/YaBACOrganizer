@@ -16,7 +16,7 @@ class AnimationPanel(BasePanel):
 
         self.animation_flags = self.add_multiple_selection_entry(self.entry_page, 'Animation Flags', choices=[
             ('Animation Options #1', [
-                'Unknown (0x1)',
+                'ignore b_C_Base movement',
                 'Specific per EAN Type',
                 "Unknown (0x4)",
                 'Unknown (0x8)'
