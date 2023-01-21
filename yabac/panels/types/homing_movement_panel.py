@@ -23,7 +23,7 @@ class HomingMovementPanel(BasePanel):
                 'Unknown (0x8)'
             ], True),
             ('Conditions', [
-                'Unknown (0x1)',
+                'Enable Auto Tracking',
                 'Enable Float Parameter',
                 "Unknown (0x4)",
                 'Enable Bone Link'
@@ -65,6 +65,10 @@ class HomingMovementPanel(BasePanel):
                     # Keep old value if its mistyped
                     pass
                 if name == "speed_modifier" and properties & 2 == 2:
+                    old_value, self.entry[name] = self.entry[name], float(self.entry[name])
+                    if old_value != self.entry[name]:
+                        control.SetValue(self.entry[name])
+                elif name == "speed_modifier" and properties & 2 != 2:
                     old_value, self.entry[name] = self.entry[name], int(self.entry[name])
                     if old_value != self.entry[name]:
                         control.SetValue(self.entry[name])

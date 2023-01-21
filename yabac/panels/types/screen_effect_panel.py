@@ -36,6 +36,6 @@ class ScreenEffectPanel(BasePanel):
         )
 
         self.u_10 = self.add_hex_entry(self.unknown_page, 'U_10')
-        self.u_14 = self.add_float_entry(self.unknown_page, 'f_14')
-        self.u_18 = self.add_float_entry(self.unknown_page, 'f_18')
-        self.u_1c = self.add_hex_entry(self.unknown_page, 'U_1C')
+        self.u_14 = self.add_float_entry(self.entry_page, 'X Position Offset')
+        self.u_18 = self.add_float_entry(self.entry_page, 'Y Position Offset')
+        self.u_1c = self.add_float_entry(self.entry_page, 'Z Position Offset')

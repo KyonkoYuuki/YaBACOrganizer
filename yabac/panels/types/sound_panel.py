@@ -34,7 +34,7 @@ class SoundPanel(BasePanel):
             ], True),
             ('Sound Options #3', [
                 'Unknown (0x1)',
-                'Unknown (0x2)',
+                'Stop VOX on matching ID',
                 "Pitch and Reverb",
                 'Stop when BAC entry is exited'
             ], True)

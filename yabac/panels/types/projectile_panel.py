@@ -20,8 +20,10 @@ class ProjectilePanel(BasePanel):
                     'None': 0x0,
                     'Terminate Previous Projectile': 0x1,
                     "Unknown (0x2)": 0x2,
+                    "Unknown (0x3)": 0x3,
                     "Unknown (0x4)": 0x4,
-                    "Unknown (0x8)": 0x8
+                    "Unknown (0x8)": 0x8,
+                    "Unknown (0x9)": 0x9
                 }, False),
                 ('Skill/BSA Options #2', None, True),
                 ('Skill Type', {
@@ -30,7 +32,8 @@ class ProjectilePanel(BasePanel):
                     'Super': 0x5,
                     'Ultimate': 0x6,
                     'Evasive': 0x7,
-                    'Blast': 0x8
+                    'Blast': 0x8,
+                    'Unknown (0x9)': 0x9
                 }, False)
             ])
         self.skill_id = self.add_num_entry(self.entry_page, 'Skill Id')
@@ -49,10 +52,10 @@ class ProjectilePanel(BasePanel):
             majorDimension=3,
             choices=[
                 ('Spawn', {
-                    'Spawn source': 0x0,
-                    'Unknown (0x1)': 0x1,
+                    'Spawn Source': 0x0,
+                    'Target Direction': 0x1,
                     'Unknown (0x2)': 0x2,
-                    'User direction': 0x3
+                    'User Direction': 0x3
                 }, False),
                 (None, None, False),
                 ('Location', {

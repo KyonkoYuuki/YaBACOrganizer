@@ -53,14 +53,14 @@ class CameraPanel(BasePanel):
             ], True),
             ('Conditons', [
                 'Unknown (0x1)',
-                'Unknown (0x2)',
+                'Enable Loop',
                 "Only play on Knockback",
                 'Enable offset changes'
             ], True),
             ('Camera Playback', [
-                'Force all players to watch',
+                'Play to All Players',
                 'Unknown (0x2)',
-                'Play relative to target',
-                'Force character cam.ean'
+                'Play relative to Target',
+                'Play character-specific Cam.EAN'
             ], True)
         ])

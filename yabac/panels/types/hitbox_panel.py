@@ -1,5 +1,5 @@
 import wx
-from yabac.panels.types import Page, BasePanel
+from yabac.panels.types import Page, BasePanel, BONE_TYPES
 from pyxenoverse.bac.types.hitbox import Hitbox
 
 
@@ -72,39 +72,21 @@ class HitboxPanel(BasePanel):
                 ], True)
             ])
 
-        self.hitbox_properties_2 = self.add_multiple_selection_entry(
-            self.entry_page,
-            'Hitbox Properties 2',
-            majorDimension=2,
-            choices=[
-                ('Hitbox Options #2', [
-                    'Unknown (0x1)',
-                    'Unknown (0x2)',
-                    "Unknown (0x4)",
-                    'Unknown (0x8)'
-                ], True),
-                ('Hitbox Options #1', {
-                    'None': 0x0,
-                    'Unknown (0x1)': 0x1,
-                    'Unknown (0x2)': 0x2,
-                    "Treat Hitbox as a Sphere": 0x4,
-                    'Unknown (0x7)': 0x7
-                }, False),
-            ])
+        self.bone_link = self.add_single_selection_entry(self.entry_page, 'Bone Link', majorDimension=5, choices=BONE_TYPES)
 
         self.damage = self.add_num_entry(damage_page, 'Damage')
         self.damage_when_blocked = self.add_num_entry(damage_page, 'Damage When Blocked')
         self.stamina_taken_when_blocked = self.add_num_entry(
             damage_page, 'Stamina Taken When Blocked', True)
         self.matrix_flags = self.add_multiple_selection_entry(matrix_page, 'Matrix Flags', choices=[
-            ('Matrix Options #1', [
+            ('Matrix Properties #1', [
                 'Unknown (0x1)',
                 'Unknown (0x2)',
                 "Unknown (0x4)",
                 'Unknown (0x8)'
             ], True),
-            ('Matrix Options #2', [
-                'Enable Scale and Rotation',
+            ('Matrix Properties #2', [
+                'Enable Min and Max bounds',
                 'Unknown (0x2)',
                 "Unknown (0x4)",
                 'Unknown (0x8)'
@@ -112,13 +94,13 @@ class HitboxPanel(BasePanel):
         ])
         self.bdm_type = self.add_single_selection_entry(damage_page, 'BDM Type', choices=Hitbox.description_choices())
 
-        self.f_18 = self.add_float_entry(self.unknown_page, 'F_18')
         self.position_x = self.add_float_entry(matrix_page, 'Position X')
         self.position_y = self.add_float_entry(matrix_page, 'Position Y')
         self.position_z = self.add_float_entry(matrix_page, 'Position Z')
-        self.size_x = self.add_float_entry(matrix_page, 'Size X')
-        self.size_y = self.add_float_entry(matrix_page, 'Size Y')
-        self.size_z = self.add_float_entry(matrix_page, 'Size Z')
-        self.rotation_x = self.add_float_entry(matrix_page, 'Rotation X')
-        self.rotation_y = self.add_float_entry(matrix_page, 'Rotation Y')
-        self.rotation_z = self.add_float_entry(matrix_page, 'Rotation Z')
+        self.scale = self.add_float_entry(matrix_page, 'Scale')
+        self.maximum_box_x = self.add_float_entry(matrix_page, 'Maximum Box X')
+        self.maximum_box_y = self.add_float_entry(matrix_page, 'Maximum Box Y')
+        self.maximum_box_z = self.add_float_entry(matrix_page, 'Maximum Box Z')
+        self.minimum_box_x = self.add_float_entry(matrix_page, 'Minimum Box X')
+        self.minimum_box_y  = self.add_float_entry(matrix_page, 'Minimum Box Y')
+        self.minimum_box_z  = self.add_float_entry(matrix_page, 'Minimum Box Z')

@@ -28,14 +28,20 @@ class EffectPanel(BasePanel):
         self.rotation_z = self.add_float_entry(eepk_page, 'Rotation Z')
         self.on_off_switch = self.add_unknown_hex_entry(
             self.entry_page, 'On/Off switch', knownValues={
-                0x0: 'On',
-                0x1: 'Off',
-                0x2: 'On',
-                0x3: 'Off',
-                0x4: 'On (Spawn on target)',
-                0x8: 'On (Loop)',
-                0x9: 'Off',
-                0x10: 'On (Show only to user)',
-                0x14: 'On (Spawn on target)',
+                0x0: 'Common On',
+                0x1: 'Off for Flag 0x0',
+                0x2: 'On (?)',
+                0x3: 'Off for Flag 0x2',
+                0x4: 'On (Spawn on target, Effect Visable to Target)',
+                0x5: 'Off for Flag 0x4',
+                0x6: 'On (?)',
+                0x7: 'Off for Flag 0x6',
+                0x8: 'Common On (Enable Loop)',
+                0x9: 'Off for Flag 0x8',
+                0x10: 'On (Effect Visable Only to User)',
+                0x11: 'Off for Flag 0x10',
+                0x12: 'On (?)',
+                0x13: 'Off for Flag 0x12',
+                0x14: 'On (Spawn on target, Effect Not Visable to Target)',
                 0x15: 'Off (used with 0x14)'
             })
