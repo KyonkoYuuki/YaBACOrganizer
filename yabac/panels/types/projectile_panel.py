@@ -111,7 +111,7 @@ class ProjectilePanel(BasePanel):
                 ('Conditions', [
                     'Announce to BCM',
                     'Unknown (0x2)',
-                    "Unknown (0x4)",
+                    "Targetable",
                     'Enable Loop'
                 ], True)
             ])

@@ -15,6 +15,7 @@ from pyxenoverse.gui.file_drop_target import FileDropTarget
 from yabac.dlg.paste import PasteDialog
 from yabac.dlg.convert import ConvertDialog
 from yabac.dlg.offset import OffsetDialog
+from yabac.dlg.comment import CommentDialog
 
 
 class MainPanel(wx.Panel):
@@ -39,6 +40,7 @@ class MainPanel(wx.Panel):
         self.insert_copy_id = wx.NewId()
         self.offset_id = wx.NewId()
         self.inc_offset_id = wx.NewId()
+        self.comment_id = wx.NewId()
         self.Bind(wx.EVT_MENU, self.on_open, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.on_save, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, self.on_delete, id=wx.ID_DELETE)
@@ -51,6 +53,7 @@ class MainPanel(wx.Panel):
         self.Bind(wx.EVT_MENU, partial(self.on_add_copy, append=False), id=self.insert_copy_id)
         self.Bind(wx.EVT_MENU, self.on_offset, id=self.offset_id)
         self.Bind(wx.EVT_MENU, self.on_offset_inc, id=self.inc_offset_id)
+        self.Bind(wx.EVT_MENU, self.on_comment, id=self.comment_id)
 
         accelerator_table = wx.AcceleratorTable([
             (wx.ACCEL_CTRL, ord('c'), wx.ID_COPY),
@@ -58,6 +61,7 @@ class MainPanel(wx.Panel):
             (wx.ACCEL_CTRL, ord('n'), self.inc_offset_id),
             (wx.ACCEL_CTRL, ord('v'), wx.ID_PASTE),
             (wx.ACCEL_CTRL, ord('a'), self.add_copy_id),
+            (wx.ACCEL_CTRL, ord('q'), self.comment_id),
             (wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE),
         ])
         self.entry_list.SetAcceleratorTable(accelerator_table)
@@ -113,6 +117,8 @@ class MainPanel(wx.Panel):
         offset_incremental = menu.Append(self.inc_offset_id, "Incrementaly Offset Start Time\tCtrl+N",
                                          "&incrementaly offset entry(s) start time")
         self.enable_selected(offset_incremental, single=False)
+        comment = menu.Append(self.comment_id, "Add Comment\tCtrl+Q", "Add Comment")
+        self.enable_selected(comment, single=False)
 
         for sel in self.entry_list.GetSelections():
             entry = self.entry_list.GetItemData(sel)
@@ -121,6 +127,14 @@ class MainPanel(wx.Panel):
             if entry.get_name() == "Entry" or entry.get_name() == "SubEntry":
                 offset.Enable(False)
                 offset_incremental.Enable(False)
+                break
+
+        for sel in self.entry_list.GetSelections():
+            entry = self.entry_list.GetItemData(sel)
+            entry_class_name = entry.__class__.__name__
+
+            if entry.get_name() != "Entry":
+                comment.Enable(False)
                 break
 
         menu.AppendSeparator()
@@ -238,7 +252,7 @@ class MainPanel(wx.Panel):
         pub.sendMessage('load_entry', item=selected[0], entry=entry)
 
     def update_entry(self, item, entry):
-        self.entry_list.SetItemText(item, f'{entry.index}: Entry (0x{entry.flags:X})')
+        self.entry_list.SetItemText(item, f'{entry.index}: Entry (0x{entry.flags:X}){entry.getDisplayComment()}')
 
     def update_item(self, item, entry):
         self.refresh = False
@@ -270,7 +284,7 @@ class MainPanel(wx.Panel):
             if not entry.sub_entries and hidden:
                 continue
             entry_item = self.entry_list.AppendItem(
-                self.entry_list.GetRootItem(), f'{entry.index}: Entry (0x{entry.flags:X})', data=entry)
+                self.entry_list.GetRootItem(), f'{entry.index}: Entry (0x{entry.flags:X}){entry.getDisplayComment()}', data=entry)
             self.build_entry_tree(entry_item, entry)
 
     def build_entry_tree(self, entry_item, entry):
@@ -312,7 +326,7 @@ class MainPanel(wx.Panel):
                 if selected != item and hidden and not self.entry_list.GetFirstChild(item)[0].IsOk():
                     to_delete = item
                 else:
-                    self.entry_list.SetItemText(item, f'{data.index}: Entry (0x{data.flags:X})')
+                    self.entry_list.SetItemText(item, f'{data.index}: Entry (0x{data.flags:X}){data.getDisplayComment()}')
             elif data.get_name() == 'SubEntry':
                 if selected != item and hidden and not self.entry_list.GetFirstChild(item)[0].IsOk():
                     to_delete = item
@@ -432,7 +446,7 @@ class MainPanel(wx.Panel):
         # Add it to sub_entry
         sub_entry_data.items.append(new_bac_type)
         sub_entry_data.items.sort(key=lambda n: n.start_time)
-        # UNLEASHED: not entry should have duration as 0, so lets just set to 1 inititally
+        # UNLEASHED: no entry should have duration as 0, so lets just set to 1 inititally
         new_bac_type.duration = 1
 
         # Add to correct place in tree list
@@ -559,6 +573,28 @@ class MainPanel(wx.Panel):
             self.reindex()
 
         pub.sendMessage('set_status_bar', text=f'incrementally Offset {len(selected)} Entries')
+
+    def on_comment(self, _):
+        selected = self.entry_list.GetSelections()
+        entry = self.entry_list.GetItemData(selected[0])
+
+
+        comment_val = ""
+        with CommentDialog(self, "Comment",entry.getComment(), -1) as dlg:
+            if dlg.ShowModal() != wx.ID_OK:
+                return
+            comment_val = dlg.GetValue()
+
+        for sel in selected:
+            entry = self.entry_list.GetItemData(sel)
+            entry.setComment(comment_val)
+
+        # update later to avoid offsetting twice
+        for sel in selected:
+            self.update_entry(sel, entry)
+
+
+        pub.sendMessage('set_status_bar', text=f'Comment Added')
 
     def on_copy(self, _):
         selected = self.entry_list.GetSelections()
