@@ -37,6 +37,7 @@ from yabac.panels.types.extended_camera_control_panel import ExtendedCameraContr
 from yabac.panels.types.effect_property_control_panel import EffectPropertyControlPanel
 from yabac.panels.types.type28_panel import Type28Panel
 from yabac.panels.types.type29_panel import Type29Panel
+from yabac.panels.types.type30_panel import Type30Panel
 
 RE_PATTERN = re.compile(r".*'(.*[.])*(.*)'.*")
 
