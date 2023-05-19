@@ -39,7 +39,7 @@ class PasteDialog(wx.Dialog):
                     grid_sizer = wx.FlexGridSizer(rows=len(entry_values), cols=3, hgap=10, vgap=10)
                     sizer.Add(grid_sizer, 0, wx.ALL, 10)
                     choices = ['No Change']
-                    if item_type in curr_values and entry_pair in curr_values[item_type]:
+                    if item_type in curr_values and entry_pair in curr_values[item_type] and depend_value in curr_values[item_type][entry_pair]:
                         choices.extend([str(val) if val < 0x8000 else f'0x{val:X}'
                                         for val in sorted(curr_values[item_type][entry_pair][depend_value])])
                     new_entry_choice = self.find_next_available_index(item_type, entry, dependency, depend_value)

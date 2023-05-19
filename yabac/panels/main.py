@@ -543,7 +543,7 @@ class MainPanel(wx.Panel):
         # update later to avoid offsetting twice
         for sel in selected:
             self.update_item(sel, entry)
-            self.reindex()
+        self.reindex()
 
         pub.sendMessage('set_status_bar', text=f'Offset {len(selected)} Entries')
 
@@ -570,7 +570,7 @@ class MainPanel(wx.Panel):
         # update later to avoid offsetting twice
         for sel in selected:
             self.update_item(sel, entry)
-            self.reindex()
+        self.reindex()
 
         pub.sendMessage('set_status_bar', text=f'incrementally Offset {len(selected)} Entries')
 
@@ -699,6 +699,9 @@ class MainPanel(wx.Panel):
             new_entry, new_entry_data = self.add_bac_entry(append, selected[0])
             new_entry_data.paste(paste_data, copy_sub_entries=False)
             self.select_item(new_entry)
+
+
+
             for sub_entry in paste_data.sub_entries:
                 for item in sub_entry.items:
                     new_item, new_item_data = self.add_item(item.type, item)
